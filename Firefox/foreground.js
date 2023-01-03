@@ -20,7 +20,7 @@ async function fetchUrl(auth, url, method = 'GET', body = null) {
   }
 
   try {
-    const response = await fetch(url, { method, credentials: 'include', headers, body })
+    const response = await content.fetch(url, { method, credentials: 'include', headers, body })
 
     if (!response.ok) {
       throw Error(`HTTP Code: ${response.status}`);
