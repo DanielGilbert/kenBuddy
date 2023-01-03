@@ -17,10 +17,8 @@ async function save_options() {
 }
 
 async function reset_to_defaults() {
-    await saveObjectInLocalStorage('ENTROPY_MINUTES', DEFAULT_ENTROPY_MINUTES);
-    await saveObjectInLocalStorage('SCHEDULE', DEFAULT_SCHEDULE);
-    await saveObjectInLocalStorage('ALLOW_PREFILL', DEFAULT_ALLOW_PREFILL);
 
+    await set_defaults();
     await restore_options();
 
     // Update status to let user know options were saved.
@@ -30,15 +28,27 @@ async function reset_to_defaults() {
         status.textContent = '';
     }, 750);
 }
-  
+
+async function set_defaults(){
+    await saveObjectInLocalStorage('ENTROPY_MINUTES', DEFAULT_ENTROPY_MINUTES);
+    await saveObjectInLocalStorage('SCHEDULE', DEFAULT_SCHEDULE);
+    await saveObjectInLocalStorage('ALLOW_PREFILL', DEFAULT_ALLOW_PREFILL);
+}
 
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
 async function restore_options() {
-    // Use default value color = 'red' and likesColor = true.
     let entropy_minutes = await getObjectFromLocalStorage('ENTROPY_MINUTES');
     let schedule = JSON.stringify(await getObjectFromLocalStorage('SCHEDULE'), null, 2);
     let allowPrefill = await getObjectFromLocalStorage('ALLOW_PREFILL');
+
+    if (entropy_minutes == null || schedule == null || allowPrefill == null){
+        await set_defaults();
+
+        entropy_minutes = await getObjectFromLocalStorage('ENTROPY_MINUTES');
+        schedule = JSON.stringify(await getObjectFromLocalStorage('SCHEDULE'), null, 2);
+        allowPrefill = await getObjectFromLocalStorage('ALLOW_PREFILL');
+    }
 
     document.getElementById('entropy').value = entropy_minutes;
     document.getElementById('schedule').value = schedule;

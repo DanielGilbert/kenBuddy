@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "kenOne",
     "description": "A simple way to fill your attendance sheet",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "icons": {
         "16": "logo/logo-16.png",
         "48": "logo/logo-48.png",
@@ -13,9 +13,6 @@
         "open_in_tab": true
     },
     "permissions": ["storage"],
-    "host_permissions": [
-        "*://*/*"
-    ],
     "content_scripts": [{
         "js": ["utils/utils.js","foreground.js"],
         "matches": ["https://app.kenjo.io/*"]

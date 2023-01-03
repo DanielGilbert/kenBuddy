@@ -231,9 +231,7 @@ async function fillToday(statusContainer) {
   
       let skippedTxt = "";
       skippedDays.forEach((s) => { skippedTxt += `\n${s.day.toISOString().split("T")[0]}: ${s.reasons.join(', ')}` });
-  
-      alert(`Created ${entries.length} entries.\n\nSkipped days:${skippedTxt}`);
-  
+
       /* Reload page to reflect changes */
       location.assign(`${location.origin}/cloud/home`);
     } catch(err) {
@@ -345,8 +343,6 @@ async function fillMonth(statusContainer) {
 
     let skippedTxt = "";
     skippedDays.forEach((s) => { skippedTxt += `\n${s.day.toISOString().split("T")[0]}: ${s.reasons.join(', ')}` });
-
-    alert(`Created ${entries.length} entries.\n\nSkipped days:${skippedTxt}`);
 
     /* Reload page to reflect changes */
     location.assign(`${location.origin}/cloud/home`);
