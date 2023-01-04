@@ -1,9 +1,17 @@
-# kenOne - Browser extension
+# kenBuddy - Browser extension
 This extension allows to fill the attendance sheet provided at kenjo.io in a more easier manner. If the real attendance is not important, and you are just filling this sheet for legal purpose - this extension is for you. It comes with an entropy and a small options page.
+
+For this extension to work, the "Attendance" widget needs to be visible on the home screen.
 
 ## Stores
 - [Google Chrome & Opera][google-store]
 - [Mozilla Firefox][firefox-store]
+
+## Settings
+In the settings, it is possible to change the following:
+- Entropy: This will alternate the start time randomly with a maximum of the given value
+- Schedule: You can set a custom start time, a custom duration (depending on how many hours you work per day) and the duration for your break.
+- Fill Month: You can also activate a hidden button, which will allow you to prefill the whole month. I'm not endorsing that feature, but, you know...
 
 ## FAQ
 - **I cannot see the button?**
