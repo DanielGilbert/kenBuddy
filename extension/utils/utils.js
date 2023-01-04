@@ -23,6 +23,7 @@ const TIMEOFF_URL = `${API_URL}/user-time-off-request/find`;
 const CALENDAR_URL = `${API_URL}/calendar-db/find`;
 const TEMPLATES_URL = `${API_URL}/calendar-template-db/templates`;
 const ATTENDANCE_URL = `${API_URL}/user-attendance-db`;
+const ATTENDANCE_FIND_URL = `${API_URL}/user-attendance-db/find`;
 
 /**
  * Retrieve object from Chrome's Local StorageArea

@@ -1,0 +1,14 @@
+{
+    "extensionDescription" : {
+        "message" : "A simple way to fill your attendance sheet at kenjo.io",
+        "description" : "Description of the extension."
+    },
+    "fillAttendanceTodayTitle" : {
+        "message" : "Fill for today",
+        "description" : "Title for filling attendance for today"
+    },    
+    "attendanceFilledTitle" : {
+        "message" : "Everything done",
+        "description" : "Title if today has been filled"
+    }
+}
