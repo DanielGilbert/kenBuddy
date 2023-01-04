@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "kenOne",
-    "description": "A simple way to fill your attendance sheet",
-    "version": "0.1.2",
+    "name": "kenBuddy",
+    "description": "A simple way to fill your attendance sheet at kenjo.io",
+    "version": "0.1.3",
     "icons": {
         "16": "logo/logo-16.png",
         "48": "logo/logo-48.png",
@@ -12,9 +12,9 @@
         "page": "settings/settings.html",
         "open_in_tab": true
     },
-    "permissions": ["storage"],
+    "permissions": ["storage","https://api.kenjo.io/*"],
     "content_scripts": [{
-        "js": ["utils/utils.js","foreground.js"],
+        "js": ["utils/browser-polyfill.js","utils/utils.js","kenbuddy.js"],
         "matches": ["https://app.kenjo.io/*"]
     }]
 }

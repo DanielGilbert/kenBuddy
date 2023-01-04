@@ -20,7 +20,7 @@ async function fetchUrl(auth, url, method = 'GET', body = null) {
   }
 
   try {
-    const response = await content.fetch(url, { method, credentials: 'include', headers, body })
+    const response = await fetch(url, { method, credentials: 'include', headers, body })
 
     if (!response.ok) {
       throw Error(`HTTP Code: ${response.status}`);
@@ -383,21 +383,19 @@ const checkElement = async selector => {
   const extDiv = document.createElement('div');
   extDiv.style.textAlign = "center";
 
-  const monthBtn = document.createElement('button');
-  monthBtn.type = 'button';
-  monthBtn.innerText = 'Attendance: Fill Month';
-  if (!localAllowPrefill)
-  monthBtn.disabled = "disabled";
-else
-    monthBtn.onclick = function() { this.disabled = "disabled"; fillMonth(this); }
-
+  if (localAllowPrefill){
+    const monthBtn = document.createElement('button');
+    monthBtn.type = 'button';
+    monthBtn.innerText = 'Attendance: Fill Month';
+    monthBtn.onclick = function() { this.disabled = "disabled"; fillMonth(this); }  
+    extDiv.append(monthBtn);
+  }
 
   const todayBtn = document.createElement('button');
   todayBtn.type = 'button';
   todayBtn.innerText = 'Attendance: Fill Today';
   todayBtn.onclick = function() { this.disabled = "disabled"; fillToday(this); }
 
-  extDiv.append(monthBtn);
   extDiv.append(todayBtn);
 
   checkElement('orgos-widget-attendance').then((selector) => {
