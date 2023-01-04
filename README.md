@@ -22,4 +22,4 @@ In the settings, it is possible to change the following:
     - It fills the attendance sheet for the entire month. As there is currently no way to remove entries that were made in advance, I highly discourage you to do that. Also, HR might not like it.
 
 [google-store]: https://chrome.google.com/webstore/detail/kenone/fdalhlmgbllklibldlbglgnomghicmhm
-[firefox-store]: https://addons.mozilla.org/de/firefox/addon/kenone/
+[firefox-store]: https://addons.mozilla.org/de/firefox/addon/kenbuddy/
