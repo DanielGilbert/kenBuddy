@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+- Prevents adding another entry on the same day
+
 ### Changed
 
 - Renames extensions
