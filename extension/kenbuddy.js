@@ -50,6 +50,18 @@ function getCalendar(auth, calendarId) {
   );
 }
 
+function getUserAttendance(auth, userId, targetDate) {
+  return fetchUrl(
+    auth,
+    ATTENDANCE_FIND_URL,
+    'POST',
+    JSON.stringify({
+      _deleted: false,
+      _userId: userId,
+      date: targetDate
+    })
+  );
+}
 
 function getUserTimeOff(auth, userId, fromDate, toDate) {
   return fetchUrl(
@@ -106,6 +118,16 @@ function hhmmToMinutes(str) {
 var localSchedule = {};
 var localEntropyMinutes = 0;
 var localAllowPrefill = false;
+
+async function userHasEntryFor(auth, user, dateToday) {
+  try {
+    var result = await getUserAttendance(auth, user, dateToday);
+
+    return (result != null && result.length > 0);
+  } catch(err) {
+    console.error(err);
+  }
+}
 
 async function fillToday(statusContainer) {
     try {
@@ -202,8 +224,10 @@ async function fillToday(statusContainer) {
   
       /* Store sheet */
       for (const [idx, ts] of entries.entries()) {
-        statusContainer.innerText = `Saving day ${idx+1} of ${entries.length}...`;
-        console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause));
+        if (! await userHasEntryFor(auth, user.ownerId, ts.date)){
+          statusContainer.innerText = `Saving day ${idx+1} of ${entries.length}...`;
+          console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause));
+        }
       }
   
       /* Show info to the user */
@@ -314,8 +338,10 @@ async function fillMonth(statusContainer) {
 
     /* Store sheet */
     for (const [idx, ts] of entries.entries()) {
-      statusContainer.innerText = `Saving day ${idx+1} of ${entries.length}...`;
-      console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause));
+      if (! await userHasEntryFor(auth, user.ownerId, ts.date)){
+        statusContainer.innerText = `Saving day ${idx+1} of ${entries.length}...`;
+        console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause));
+      }
     }
 
     /* Show info to the user */
@@ -371,10 +397,21 @@ const checkElement = async selector => {
     extDiv.append(monthBtn);
   }
 
+  let date = new Date();
+  const today = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
+  let auth = await getAuth();
+  let user = await getUser(auth);
+  var hasEntryForToday = await userHasEntryFor(auth, user.ownerId, today);
+
   const todayBtn = document.createElement('button');
   todayBtn.type = 'button';
   todayBtn.innerText = browser.i18n.getMessage('fillAttendanceTodayTitle');
-  todayBtn.onclick = function() { this.disabled = "disabled"; fillToday(this); }
+  if (hasEntryForToday){
+    todayBtn.disabled = "disabled";
+    todayBtn.innerText = browser.i18n.getMessage('attendanceFilledTitle');
+  } else {
+    todayBtn.onclick = function() { this.disabled = "disabled"; fillToday(this); }
+  }
 
   extDiv.append(todayBtn);
 

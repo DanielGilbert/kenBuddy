@@ -6,5 +6,9 @@
     "fillAttendanceTodayTitle" : {
         "message" : "Für Heute ausfüllen",
         "description" : "Title for filling attendance for today"
+    },
+    "attendanceFilledTitle" : {
+        "message" : "Alles erledigt",
+        "description" : "Title if today has been filled"
     }
 }
