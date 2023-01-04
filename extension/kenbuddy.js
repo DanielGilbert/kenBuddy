@@ -5,33 +5,13 @@
 // and injected into the same or different pages.
 'use strict';
 
+if (typeof browser === "undefined") {
+  var browser = chrome;
+}
+
 function USERWORK_URL(userId) {
   return `${API_URL}/user-work-db/${userId}/calendar`;
 }
-
-
-/* Fetch function */
-
-async function fetchUrl(auth, url, method = 'GET', body = null) {
-  const headers = { 'Content-Type': 'application/json' }
-
-  if (auth) {
-    headers.Authorization = auth;
-  }
-
-  try {
-    const response = await fetch(url, { method, credentials: 'include', headers, body })
-
-    if (!response.ok) {
-      throw Error(`HTTP Code: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (err) {
-    throw new Error(`Failed performing request, reload the site and try again.\n\n${method} ${url}\n${err}`);
-  }
-}
-
 
 /* AUTH */
 
@@ -393,7 +373,7 @@ const checkElement = async selector => {
 
   const todayBtn = document.createElement('button');
   todayBtn.type = 'button';
-  todayBtn.innerText = 'Attendance: Fill Today';
+  todayBtn.innerText = browser.i18n.getMessage('fillAttendanceTodayTitle');
   todayBtn.onclick = function() { this.disabled = "disabled"; fillToday(this); }
 
   extDiv.append(todayBtn);

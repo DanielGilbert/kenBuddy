@@ -1,0 +1,10 @@
+{
+    "extensionDescription" : {
+        "message" : "Eine einfache Möglichkeit, um die Anwesenheit bei kenjo.io einzutragen.",
+        "description" : "Description of the extension."
+    },
+    "fillAttendanceTodayTitle" : {
+        "message" : "Für Heute ausfüllen",
+        "description" : "Title for filling attendance for today"
+    }
+}
