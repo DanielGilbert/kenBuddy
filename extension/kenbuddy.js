@@ -118,9 +118,9 @@ var localSchedule = {};
 var localEntropyMinutes = 0;
 var localAllowPrefill = false;
 
-async function userHasEntryFor(auth, user, dateToday) {
+async function userHasEntryFor(auth, user, date) {
   try {
-    var result = await getUserAttendance(auth, user, dateToday);
+    var result = await getUserAttendance(auth, user, date);
 
     return (result != null && result.length > 0);
   } catch(err) {
@@ -134,6 +134,7 @@ async function fillFor(statusContainer, fromDate, toDate) {
     statusContainer.innerText = "Getting user info...";
     const auth = await getAuth();
     const user = await getUser(auth);
+
     statusContainer.innerText = "Getting user time off...";
     const timeOff = await getUserTimeOff(auth, user.ownerId, fromDate.toISOString(), toDate.toISOString());
 
@@ -292,9 +293,16 @@ const checkElement = async selector => {
 
   let date = new Date();
   const today = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
-  let auth = await getAuth();
-  let user = await getUser(auth);
-  var hasEntryForToday = await userHasEntryFor(auth, user.ownerId, today);
+  
+  var hasEntryForToday = false;
+
+  try {
+    let auth = await getAuth();
+    let user = await getUser(auth);
+    hasEntryForToday = await userHasEntryFor(auth, user.ownerId, today);
+  } catch (exception) {
+    hasEntryForToday = false;
+  }
 
   const todayBtn = document.createElement('button');
   todayBtn.type = 'button';
