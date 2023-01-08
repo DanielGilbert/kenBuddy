@@ -94,6 +94,9 @@ function addEntry(auth, userId, date, startTime, endTime, breakTime) {
 
 
 /* HELPERS */
+function singleDay(date) {
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
+}
 
 function startOfMonth(date) {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0));
@@ -125,131 +128,14 @@ async function userHasEntryFor(auth, user, dateToday) {
   }
 }
 
-async function fillToday(statusContainer) {
-    try {
-      let date = new Date();
-      const today = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
-
-      /* Get user info */
-      statusContainer.innerText = "Getting user info...";
-      const auth = await getAuth();
-      const user = await getUser(auth);
-      statusContainer.innerText = "Getting user time off...";
-      const timeOff = await getUserTimeOff(auth, user.ownerId, today.toISOString(), today.toISOString());
-  
-      /* Get calendar info */
-      statusContainer.innerText = "Getting user calendar...";
-      const userCalendar = await getUserCalendar(auth, user.ownerId);
-      const calendars = await getCalendar(auth, userCalendar.calendarId);
-      const templates = await getCalendarTemplates(auth);
-      const template = templates.filter(tpl => tpl.templateKey == calendars[0]._calendarTemplateKey)[0];
-  
-      /* Parse non working days */
-      statusContainer.innerText = "Processing non working days...";
-      const nonWorkingDays = [];
-  
-      timeOff.forEach((t) => {
-        nonWorkingDays.push({
-          reason: t._policyName,
-          start: new Date(Date.parse(t._from)),
-          end: new Date(Date.parse(t._to))
-        });
-      });
-  
-      template.holidays.forEach((h) => {
-        const start = new Date(Date.parse(`${h.holidayDate}T00:00:00.000Z`));
-        const end = new Date(Date.parse(`${h.holidayDate}T23:59:59.999Z`));
-  
-        if (start >= today && start <= today) {
-          nonWorkingDays.push({
-            reason: h.holidayKey,
-            start: start,
-            end: end
-          });
-        }
-      });
-  
-      calendars[0]._customHolidays.forEach((h) => {
-        const holidayDate = h.holidayDate.split("T")[0];
-  
-        const start = new Date(Date.parse(`${holidayDate}T00:00:00.000Z`));
-        const end = new Date(Date.parse(`${holidayDate}T23:59:59.999Z`));
-  
-        if (start >= today && start <= today) {
-          nonWorkingDays.push({
-            reason: h.holidayName,
-            start: start,
-            end: end
-          });
-        }
-      });
-  
-      /* Generate month sheet */
-      statusContainer.innerText = "Generating attendance sheet...";
-      const entries = [];
-      const skippedDays = [];
-  
-      
-    /* Check if the day has a schedule */
-    if (!(today.getDay() in localSchedule) || localSchedule[today.getDay()].length == 0) {
-        return;
-    }
-
-    /* Check if the day should be skipped (holiday or time off) */
-    const skipReasons = nonWorkingDays.filter((nwd) => today >= nwd.start && today <= nwd.end);
-
-    if (skipReasons.length > 0) {
-        skippedDays.push({ day: new Date(today.getTime()), reasons: skipReasons.map(sr => sr.reason) });
-        return;
-    }
-
-    /* Produce an entry for this day */
-    localSchedule[today.getDay()].forEach((sch) => {
-        const start = hhmmToMinutes(sch.start) + Math.ceil(Math.random() * localEntropyMinutes);
-        const pause = hhmmToMinutes(sch.pause);
-        const end = start + pause + hhmmToMinutes(sch.hours);
-
-        entries.push({
-        date: today.toISOString(),
-        start: start,
-        end: end,
-        pause: pause
-        });
-    });
-      
-  
-      /* Store sheet */
-      for (const [idx, ts] of entries.entries()) {
-        if (! await userHasEntryFor(auth, user.ownerId, ts.date)){
-          statusContainer.innerText = `Saving day ${idx+1} of ${entries.length}...`;
-          console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause));
-        }
-      }
-  
-      /* Show info to the user */
-      statusContainer.innerText = "Done";
-  
-      let skippedTxt = "";
-      skippedDays.forEach((s) => { skippedTxt += `\n${s.day.toISOString().split("T")[0]}: ${s.reasons.join(', ')}` });
-
-      /* Reload page to reflect changes */
-      location.assign(`${location.origin}/cloud/home`);
-    } catch(err) {
-      alert(`Kenjo Attendance Fill Month error:\n${err}`);
-    }
-  }
-
-async function fillMonth(statusContainer) {
+async function fillFor(statusContainer, fromDate, toDate) {
   try {
-    const monthStart = startOfMonth(new Date());
-    const monthEnd = endOfMonth(new Date());
-
     /* Get user info */
     statusContainer.innerText = "Getting user info...";
     const auth = await getAuth();
     const user = await getUser(auth);
     statusContainer.innerText = "Getting user time off...";
-    const timeOff = await getUserTimeOff(auth, user.ownerId, monthStart.toISOString(), monthEnd.toISOString());
+    const timeOff = await getUserTimeOff(auth, user.ownerId, fromDate.toISOString(), toDate.toISOString());
 
     /* Get calendar info */
     statusContainer.innerText = "Getting user calendar...";
@@ -274,7 +160,7 @@ async function fillMonth(statusContainer) {
       const start = new Date(Date.parse(`${h.holidayDate}T00:00:00.000Z`));
       const end = new Date(Date.parse(`${h.holidayDate}T23:59:59.999Z`));
 
-      if (start >= monthStart && start <= monthEnd) {
+      if (start >= fromDate && start <= toDate) {
         nonWorkingDays.push({
           reason: h.holidayKey,
           start: start,
@@ -289,7 +175,7 @@ async function fillMonth(statusContainer) {
       const start = new Date(Date.parse(`${holidayDate}T00:00:00.000Z`));
       const end = new Date(Date.parse(`${holidayDate}T23:59:59.999Z`));
 
-      if (start >= monthStart && start <= monthEnd) {
+      if (start >= fromDate && start <= toDate) {
         nonWorkingDays.push({
           reason: h.holidayName,
           start: start,
@@ -303,7 +189,7 @@ async function fillMonth(statusContainer) {
     const entries = [];
     const skippedDays = [];
 
-    for (let day = monthStart; day <= monthEnd; day.setDate(day.getDate() + 1)) {
+    for (let day = fromDate; day <= toDate; day.setDate(day.getDate() + 1)) {
       /* Check if the day has an schedule */
       if (!(day.getDay() in localSchedule) || localSchedule[day.getDay()].length == 0) {
         continue;
@@ -343,15 +229,26 @@ async function fillMonth(statusContainer) {
     /* Show info to the user */
     statusContainer.innerText = "Done";
 
-    let skippedTxt = "";
-    skippedDays.forEach((s) => { skippedTxt += `\n${s.day.toISOString().split("T")[0]}: ${s.reasons.join(', ')}` });
-
     /* Reload page to reflect changes */
     location.assign(`${location.origin}/cloud/home`);
     
   } catch(err) {
     alert(`Kenjo Attendance Fill Month error:\n${err}`);
-  }
+  }  
+}
+
+async function fillToday(statusContainer) {
+
+  let date = new Date();
+  const today = singleDay(date);
+  await fillFor(statusContainer, today, today);
+}
+
+async function fillMonth(statusContainer) {
+  let currentDate = new Date();
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
+  await fillFor(statusContainer, monthStart, monthEnd);
 }
 
 const checkElement = async selector => {
