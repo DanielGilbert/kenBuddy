@@ -5,10 +5,6 @@
 // and injected into the same or different pages.
 'use strict';
 
-if (typeof browser === "undefined") {
-  var browser = chrome;
-}
-
 function USERWORK_URL(userId) {
   return `${API_URL}/user-work-db/${userId}/calendar`;
 }
