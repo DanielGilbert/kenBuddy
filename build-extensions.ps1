@@ -1,4 +1,10 @@
 Add-Type -assembly  System.IO.Compression.FileSystem
+
+function CreateDirectories($directory)
+{
+    [System.IO.Directory]::CreateDirectory($directory)
+}
+
 function ZipFiles( $zipfilename, $sourcedir, $manifestFile )
 {
     if (Test-Path $zipfilename) {
@@ -8,7 +14,10 @@ function ZipFiles( $zipfilename, $sourcedir, $manifestFile )
     [System.IO.Compression.ZipFile]::CreateFromDirectory($sourcedir, $zipfilename, $compressionLevel, $false)
     $zip =  [System.IO.Compression.ZipFile]::Open($zipfileName,"Update")
     $zipArchiveEntry = $zip.GetEntry("manifest.json")
-    $zipArchiveEntry.Delete()
+    if ($null -ne $zipArchiveEntry)
+    {
+        $zipArchiveEntry.Delete()
+    }
     $manifestEntry = $zip.GetEntry($manifestFile)
     $tempfile = Join-Path $env:TEMP $manifestFile
     If ($manifestEntry) { [IO.Compression.ZipFileExtensions]::ExtractToFile( $manifestEntry, $tempfile, $true ) }
@@ -25,7 +34,13 @@ function ZipFiles( $zipfilename, $sourcedir, $manifestFile )
     $zip.Dispose()
 }
 
-Write-Host Building...
+Write-Host Ensuring folders exists...
+CreateDirectories -directory $PSScriptRoot\build\chrome\
+CreateDirectories -directory $PSScriptRoot\build\firefox\
+CreateDirectories -directory $PSScriptRoot\debug\chrome\
+CreateDirectories -directory $PSScriptRoot\debug\firefox\
+
+Write-Host Packaging extensions...
 ZipFiles -zipfilename $PSScriptRoot\build\chrome\release.zip -sourcedir $PSScriptRoot\extension -manifestFile "manifest_v3.json"
 ZipFiles -zipfilename $PSScriptRoot\build\firefox\release.zip -sourcedir $PSScriptRoot\extension -manifestFile "manifest_v2.json"
 
