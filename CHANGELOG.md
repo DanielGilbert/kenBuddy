@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixes an issue where the button won't appear after logging in
 
+### Maintenance
+
+- Code has been refactored
+
 ## [0.1.3] - 2022-01-04
 
 ### Added

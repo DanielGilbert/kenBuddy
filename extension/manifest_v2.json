@@ -14,7 +14,8 @@
     },
     "permissions": ["storage","https://api.kenjo.io/*"],
     "content_scripts": [{
-        "js": ["firefox/utils.js","utils/utils.js","kenbuddy.js"],
+        "css": ["css/bootstrap.min.css"],
+        "js": ["firefox/utils.js","utils/const.js","utils/utils.js","utils/calls.js","utils/fill.js","kenbuddy.js"],
         "matches": ["https://app.kenjo.io/*"]
     }],
     "default_locale": "en"

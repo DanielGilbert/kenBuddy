@@ -5,238 +5,7 @@
 // and injected into the same or different pages.
 'use strict';
 
-function USERWORK_URL(userId) {
-  return `${API_URL}/user-work-db/${userId}/calendar`;
-}
-
-/* AUTH */
-
-async function getAuth() {
-  const data = await fetchUrl(null, AUTH_COOKIE_URL);
-  return `${data.token_type} ${data.access_token}`;
-}
-
-/* GET */
-
-function getUser(auth) {
-  return fetchUrl(auth, ME_URL);
-}
-
-
-function getUserCalendar(auth, userId) {
-  return fetchUrl(auth, USERWORK_URL(userId));
-}
-
-
-function getCalendarTemplates(auth) {
-  return fetchUrl(auth, TEMPLATES_URL);
-}
-
-
-/* POST */
-
-function getCalendar(auth, calendarId) {
-  return fetchUrl(
-    auth,
-    CALENDAR_URL,
-    'POST',
-    JSON.stringify({
-      _id: calendarId
-    })
-  );
-}
-
-function getUserAttendance(auth, userId, targetDate) {
-  return fetchUrl(
-    auth,
-    ATTENDANCE_FIND_URL,
-    'POST',
-    JSON.stringify({
-      _deleted: false,
-      _userId: userId,
-      date: targetDate
-    })
-  );
-}
-
-function getUserTimeOff(auth, userId, fromDate, toDate) {
-  return fetchUrl(
-    auth,
-    TIMEOFF_URL,
-    'POST',
-    JSON.stringify({
-      _from: { $gte: fromDate },
-      _to: { $lte: toDate },
-      _userId: userId
-    })
-  );
-}
-
-
-function addEntry(auth, userId, date, startTime, endTime, breakTime) {
-  return fetchUrl(
-    auth,
-    ATTENDANCE_URL,
-    'POST',
-    JSON.stringify({
-      ownerId: userId,
-      date: date,
-      startTime: startTime,
-      endTime: endTime,
-      breakTime: breakTime,
-      _approved: false,
-      _changesTracking: [],
-      _deleted: false,
-      _userId: userId
-    })
-  );
-}
-
-
-/* HELPERS */
-function singleDay(date) {
-  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
-}
-
-function startOfMonth(date) {
-  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), 1, 0, 0, 0, 0));
-}
-
-
-function endOfMonth(date) {
-  return new Date(Date.UTC(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999));
-}
-
-function hhmmToMinutes(str) {
-  return str.split(':').reduce((acc, curr) => (acc*60) + +curr);
-}
-
-
 /* MAIN */
-
-var localSchedule = {};
-var localEntropyMinutes = 0;
-var localAllowPrefill = false;
-
-async function userHasEntryFor(auth, user, date) {
-  try {
-    var result = await getUserAttendance(auth, user, date);
-
-    return (result != null && result.length > 0);
-  } catch(err) {
-    console.error(err);
-  }
-}
-
-async function fillFor(statusContainer, fromDate, toDate) {
-  try {
-    /* Get user info */
-    statusContainer.innerText = "Getting user info...";
-    const auth = await getAuth();
-    const user = await getUser(auth);
-
-    statusContainer.innerText = "Getting user time off...";
-    const timeOff = await getUserTimeOff(auth, user.ownerId, fromDate.toISOString(), toDate.toISOString());
-
-    /* Get calendar info */
-    statusContainer.innerText = "Getting user calendar...";
-    const userCalendar = await getUserCalendar(auth, user.ownerId);
-    const calendars = await getCalendar(auth, userCalendar.calendarId);
-    const templates = await getCalendarTemplates(auth);
-    const template = templates.filter(tpl => tpl.templateKey == calendars[0]._calendarTemplateKey)[0];
-
-    /* Parse non working days */
-    statusContainer.innerText = "Processing non working days...";
-    const nonWorkingDays = [];
-
-    timeOff.forEach((t) => {
-      nonWorkingDays.push({
-        reason: t._policyName,
-        start: new Date(Date.parse(t._from)),
-        end: new Date(Date.parse(t._to))
-      });
-    });
-
-    template.holidays.forEach((h) => {
-      const start = new Date(Date.parse(`${h.holidayDate}T00:00:00.000Z`));
-      const end = new Date(Date.parse(`${h.holidayDate}T23:59:59.999Z`));
-
-      if (start >= fromDate && start <= toDate) {
-        nonWorkingDays.push({
-          reason: h.holidayKey,
-          start: start,
-          end: end
-        });
-      }
-    });
-
-    calendars[0]._customHolidays.forEach((h) => {
-      const holidayDate = h.holidayDate.split("T")[0];
-
-      const start = new Date(Date.parse(`${holidayDate}T00:00:00.000Z`));
-      const end = new Date(Date.parse(`${holidayDate}T23:59:59.999Z`));
-
-      if (start >= fromDate && start <= toDate) {
-        nonWorkingDays.push({
-          reason: h.holidayName,
-          start: start,
-          end: end
-        });
-      }
-    });
-
-    /* Generate month sheet */
-    statusContainer.innerText = "Generating attendance sheet...";
-    const entries = [];
-    const skippedDays = [];
-
-    for (let day = fromDate; day <= toDate; day.setDate(day.getDate() + 1)) {
-      /* Check if the day has an schedule */
-      if (!(day.getDay() in localSchedule) || localSchedule[day.getDay()].length == 0) {
-        continue;
-      }
-
-      /* Check if the day should be skipped (holiday or time off) */
-      const skipReasons = nonWorkingDays.filter((nwd) => day >= nwd.start && day <= nwd.end);
-
-      if (skipReasons.length > 0) {
-        skippedDays.push({ day: new Date(day.getTime()), reasons: skipReasons.map(sr => sr.reason) });
-        continue;
-      }
-
-      /* Produce an entry for this day */
-      localSchedule[day.getDay()].forEach((sch) => {
-        const start = hhmmToMinutes(sch.start) + Math.ceil(Math.random() * localEntropyMinutes);
-        const pause = hhmmToMinutes(sch.pause);
-        const end = start + pause + hhmmToMinutes(sch.hours);
-
-        entries.push({
-          date: day.toISOString(),
-          start: start,
-          end: end,
-          pause: pause
-        });
-      });
-    }
-
-    /* Store sheet */
-    for (const [idx, ts] of entries.entries()) {
-      if (! await userHasEntryFor(auth, user.ownerId, ts.date)){
-        statusContainer.innerText = `Saving day ${idx+1} of ${entries.length}...`;
-        console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause));
-      }
-    }
-
-    /* Show info to the user */
-    statusContainer.innerText = "Done";
-
-    /* Reload page to reflect changes */
-    location.assign(`${location.origin}/cloud/home`);
-    
-  } catch(err) {
-    alert(`Kenjo Attendance Fill Month error:\n${err}`);
-  }  
-}
 
 async function fillToday(statusContainer) {
 
@@ -245,19 +14,19 @@ async function fillToday(statusContainer) {
   await fillFor(statusContainer, today, today);
 }
 
-async function fillMonth(statusContainer) {
+async function fillCurrentMonth(statusContainer) {
   let currentDate = new Date();
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   await fillFor(statusContainer, monthStart, monthEnd);
 }
 
-const checkElement = async selector => {
-  while ( document.querySelector(selector) === null) {
-    await new Promise( resolve =>  requestAnimationFrame(resolve) )
-  }
-  return document.querySelector(selector);
-};
+async function fillCurrentWeek(statusContainer) {
+  let currentDate = new Date();
+  const weekStart = currentDate.getStartOfWeek();
+  const weekEnd = currentDate.getEndOfWeek();
+  await fillFor(statusContainer, weekStart, weekEnd);
+}
 
 (async function() {
   /* Make schedule and entropy configurable */
@@ -281,19 +50,37 @@ const checkElement = async selector => {
 
   /* Add button */
   const extDiv = document.createElement('div');
-  extDiv.style.textAlign = "center";
+  extDiv.style.textAlign = 'center';
+  extDiv.className = 'btn-group btn-group-xs';
 
   if (localAllowPrefill){
     const monthBtn = document.createElement('button');
     monthBtn.type = 'button';
     monthBtn.innerText = 'Attendance: Fill Month';
-    monthBtn.onclick = function() { this.disabled = "disabled"; fillMonth(this); }  
+    monthBtn.className = 'btn btn-primary';
+    monthBtn.onclick = function() { this.disabled = "disabled"; fillCurrentMonth(this); }  
     extDiv.append(monthBtn);
   }
 
   let date = new Date();
   const today = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
   
+  const todayBtn = document.createElement('button');
+  todayBtn.type = 'button';
+  todayBtn.className = 'btn btn-primary';
+  todayBtn.innerText = browser.i18n.getMessage('fillAttendanceTodayTitle');
+ 
+  extDiv.append(todayBtn);
+
+  const weekBtn = document.createElement('button');
+  weekBtn.type = 'button';
+  weekBtn.className = 'btn btn-primary';
+  weekBtn.innerText = browser.i18n.getMessage('fillAttendanceWeekTitle');
+  weekBtn.onclick = function() { this.disabled = "disabled"; fillCurrentWeek(this); }
+  extDiv.append(weekBtn);
+
+  var selector = await checkElement('orgos-widget-attendance');
+
   var hasEntryForToday = false;
 
   try {
@@ -304,19 +91,12 @@ const checkElement = async selector => {
     hasEntryForToday = false;
   }
 
-  const todayBtn = document.createElement('button');
-  todayBtn.type = 'button';
-  todayBtn.innerText = browser.i18n.getMessage('fillAttendanceTodayTitle');
   if (hasEntryForToday){
     todayBtn.disabled = "disabled";
     todayBtn.innerText = browser.i18n.getMessage('attendanceFilledTitle');
   } else {
     todayBtn.onclick = function() { this.disabled = "disabled"; fillToday(this); }
   }
-
-  extDiv.append(todayBtn);
-
-  checkElement('orgos-widget-attendance').then((selector) => {
-      selector.append(extDiv);
-  });
+  
+  selector.append(extDiv);
 })();

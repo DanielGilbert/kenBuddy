@@ -6,7 +6,11 @@
     "fillAttendanceTodayTitle" : {
         "message" : "Fill for today",
         "description" : "Title for filling attendance for today"
-    },    
+    },
+    "fillAttendanceWeekTitle" : {
+        "message" : "Fill for the week",
+        "description" : "Title for filling attendance for the week"
+    },
     "attendanceFilledTitle" : {
         "message" : "Everything done",
         "description" : "Title if today has been filled"
