@@ -6,14 +6,14 @@ function timeToDate(timeString){
 async function save_options() {
     var entropy = document.getElementById('entropy').value;
     //var schedule = JSON.parse(document.getElementById('schedule').value);
-    var allowPrefill = document.getElementById('allowPrefill').checked;
+    var showMonth = document.getElementById('showMonthInput').checked;
 
     await saveObjectInLocalStorage('ENTROPY_MINUTES', entropy);
     //await saveObjectInLocalStorage('SCHEDULE', schedule);
-    await saveObjectInLocalStorage('ALLOW_PREFILL', allowPrefill);
+    await saveObjectInLocalStorage('ALLOW_PREFILL', showMonth);
 
     // Update status to let user know options were saved.
-    var status = document.getElementById('status');
+    var status = document.getElementById('statusDiv');
     status.textContent = 'Options saved.';
     setTimeout(function() {
         status.textContent = '';
@@ -26,7 +26,7 @@ async function reset_to_defaults() {
     await restore_options();
 
     // Update status to let user know options were saved.
-    var status = document.getElementById('status');
+    var status = document.getElementById('statusDiv');
     status.textContent = 'Options restored.';
     setTimeout(function() {
         status.textContent = '';
@@ -212,13 +212,16 @@ function translateElement(element) {
     element.innerText = translation;
 }
 
+async function setHandlers(){
+    document.getElementById('saveBtn').addEventListener('click', save_options);
+    document.getElementById('reset').addEventListener('click', reset_to_defaults);
+}
+
 async function domLoaded(){
     await loadLocalizations();
+    await setHandlers();
     await createScheduleLayout();
     await restore_options();
 }
 
 document.addEventListener('DOMContentLoaded', domLoaded);
-
-document.getElementById('save').addEventListener('click', save_options);
-document.getElementById('reset').addEventListener('click', reset_to_defaults);
