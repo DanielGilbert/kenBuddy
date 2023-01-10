@@ -14,5 +14,80 @@
     "attendanceFilledTitle" : {
         "message" : "Everything done",
         "description" : "Title if today has been filled"
+    },
+    "sunday" : {
+        "message" : "Sunday"
+    },
+    "monday" : {
+        "message" : "Monday"
+    },
+    "tuesday" : {
+        "message" : "Tuesday"
+    },
+    "wednesday" : {
+        "message" : "Wednesday"
+    },
+    "thursday" : {
+        "message" : "Thursday"
+    },
+    "friday" : {
+        "message" : "Friday"
+    },
+    "saturday" : {
+        "message" : "Saturday"
+    },
+    "schedule" : {
+        "message" : "Schedule"
+    },
+    "generalSettings" : {
+        "message" : "General Settings"
+    },
+    "workdayEnabled" : {
+        "message" : "Enabled"
+    },
+    "start" : {
+        "message" : "Start"
+    },
+    "pause" : {
+        "message" : "Pause"
+    },
+    "hours" : {
+        "message" : "Hours"
+    },
+    "save" : {
+        "message" : "Save"
+    },
+    "resetToDefaults" : {
+        "message" : "Reset to defaults"
+    },
+    "kenBuddySettings" : {
+        "message" : "kenBuddy Settings"
+    },
+    "showMonth" : {
+        "message" : "Show for complete month"
+    },
+    "showMonthExplanation" : {
+        "message" : "This will show the button to fill the complete month. Use at your own risk!"
+    },
+    "showDay" : {
+        "message" : "Show for single day"
+    },
+    "showDayExplanation" : {
+        "message" : "This will show the button to fill a single day."
+    },
+    "showWeek" : {
+        "message" : "Show for week"
+    },
+    "showWeekExplanation" : {
+        "message" : "This will show the button to fill the whole week."
+    },
+    "entropy" : {
+        "message" : "Entropy (0 - 59)"
+    },
+    "entropyExplanation" : {
+        "message" : "This describes how much the start time will vary in minutes."
+    },
+    "acknowledgment" : {
+        "message" : "Based on the Greasemonkey script by "
     }
 }

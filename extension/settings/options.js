@@ -66,7 +66,7 @@ async function createFormCheckRow(weekdayItem){
     rowFormLabelElement.className = 'form-check-label';
     rowFormLabelElement.id = weekdayItem + '-isActiveHelp';
     rowFormLabelElement.setAttribute('for', weekdayItem + '-isActive');
-    rowFormLabelElement.innerText = 'Active';
+    rowFormLabelElement.innerText = browser.i18n.getMessage('workdayEnabled');
 
     rowFormCheckDiv.append(rowFormLabelElement);
     rowFormCheckDiv.append(rowFormInputElement);
@@ -97,7 +97,6 @@ async function createFormInputRow(weekdayItem, label, type){
     rowFormLabelElement.setAttribute('for', weekdayItem + '-' + type + '-timeInput');
     rowFormLabelElement.innerText = label;
 
-
     rowColDiv.append(rowFormInputElement);
 
     rowDiv.append(rowFormLabelElement);
@@ -114,11 +113,11 @@ async function createScheduleLayout(){
         let item = document.getElementById(weekdayItem + '-card');
 
         let cardDiv = document.createElement('div');
-        cardDiv.className = 'card border-primary mb-3';
+        cardDiv.className = 'card border-dark mb-3';
         
         let cardDivHeader = document.createElement('div');
         cardDivHeader.className = 'card-header';
-        cardDivHeader.innerText = weekdayItem;
+        cardDivHeader.innerText = browser.i18n.getMessage(weekdayItem);
 
         var cardBody = document.createElement('div');
         cardBody.className = 'card-body';
@@ -127,7 +126,7 @@ async function createScheduleLayout(){
         cardBody.append(formCheckRow);
 
         for (let timeItem of timeEdits){
-            var inputRow = await createFormInputRow(weekdayItem, timeItem, timeItem);
+            var inputRow = await createFormInputRow(weekdayItem, browser.i18n.getMessage(timeItem), timeItem);
             cardBody.append(inputRow)
         }
 
@@ -198,10 +197,23 @@ async function restore_options() {
     document.getElementById('entropy').value = entropy_minutes;
     await setSchedule(schedule);
     //document.getElementById('schedule').value = schedule;
-    document.getElementById('allowPrefill').checked = allowPrefill;
+    document.getElementById('showMonthInput').checked = allowPrefill;
+}
+
+async function loadLocalizations(){
+    //Run for all elements with the tag
+    document.querySelectorAll("[data-i18n-key]")
+            .forEach(translateElement);
+}
+
+function translateElement(element) {
+    const key = element.getAttribute("data-i18n-key");
+    const translation =  browser.i18n.getMessage(key);
+    element.innerText = translation;
 }
 
 async function domLoaded(){
+    await loadLocalizations();
     await createScheduleLayout();
     await restore_options();
 }
