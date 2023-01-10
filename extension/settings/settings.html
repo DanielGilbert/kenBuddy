@@ -13,13 +13,35 @@
             <h4>General Settings</h3>
         </div>
         <div class="row">
-            <div class="col-6 ml-3">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
-                    <label class="form-check-label" for="allowPrefill">Allow prefill for complete month</label>
-                    <small id="allowPrefillHelp" class="form-text text-muted">This will activate the "Fill Month" button. Use at your own risk!</small>
+            <div class="col-6">
+                <div class="row">
+                    <div class="ml-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
+                            <label class="form-check-label" for="allowPrefill">Show for complete month</label>
+                            <small id="allowPrefillHelp" class="form-text text-muted">This will show the button to fill the complete month. Use at your own risk!</small>
+                        </div>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="ml-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
+                        <label class="form-check-label" for="allowPrefill">Show for single day</label>
+                        <small id="allowPrefillHelp" class="form-text text-muted">This will show the button to fill a single day.</small>
+                    </div>
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="ml-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
+                            <label class="form-check-label" for="allowPrefill">Show for week</label>
+                            <small id="allowPrefillHelp" class="form-text text-muted">This will show the button to fill the whole week.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 <div class="col-6">
                     <label for="entropy">Entropy (0 - 59)</label>
                     <input class="form-control" type="number" id="entropy" aria-describedby="entropyHelp" name="entropy" min="0" max="59">
@@ -30,238 +52,21 @@
             <h4>Schedule</h3>
         </div>
         <div class="row">
-            <div class="col-sm-3">
-                <div class="card border-primary mb-3">
-                    <div class="card-header">Monday</div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="ml-3">
-                                <div class="col-sm form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
-                                    <label class="form-check-label" for="allowPrefill">Active</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Start</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Pause</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Hours</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+            <div id="monday-card" class="col-sm-3">
             </div>
-            <div class="col-sm-3">
-                <div class="card border-primary mb-3">
-                    <div class="card-header">Tuesday</div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="ml-3">
-                                <div class="col-sm form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
-                                    <label class="form-check-label" for="allowPrefill">Active</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Start</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Pause</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Hours</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+            <div id="tuesday-card" class="col-sm-3">
             </div>
-            <div class="col-sm-3">
-                <div class="card border-primary mb-3">
-                    <div class="card-header">Wednesday</div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="ml-3">
-                                <div class="col-sm form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
-                                    <label class="form-check-label" for="allowPrefill">Active</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Start</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Pause</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Hours</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+            <div id="wednesday-card" class="col-sm-3">
             </div>
-            <div class="col-sm-3">
-                <div class="card border-primary mb-3">
-                    <div class="card-header">Thursday</div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="ml-3">
-                                <div class="col-sm form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
-                                    <label class="form-check-label" for="allowPrefill">Active</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Start</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Pause</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Hours</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+            <div id="thursday-card" class="col-sm-3">
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-3">
-                <div class="card border-primary mb-3">
-                    <div class="card-header">Friday</div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="ml-3">
-                                <div class="col-sm form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
-                                    <label class="form-check-label" for="allowPrefill">Active</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Start</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Pause</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Hours</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+            <div id="friday-card" class="col-sm-3">
             </div>
-            <div class="col-sm-3">
-                <div class="card border-dark mb-3">
-                    <div class="card-header">Saturday</div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="ml-3">
-                                <div class="col-sm form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
-                                    <label class="form-check-label" for="allowPrefill">Active</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Start</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Pause</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Hours</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+            <div id="saturday-card" class="col-sm-3">
             </div>
-            <div class="col-sm-3">
-                <div class="card border-dark mb-3">
-                    <div class="card-header">Sunday</div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="ml-3">
-                                <div class="col-sm form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" value="" aria-describedby="allowPrefillHelp" id="allowPrefill">
-                                    <label class="form-check-label" for="allowPrefill">Active</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Start</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Pause</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-4 col-form-label">Hours</label>
-                            <div class="col-sm">
-                              <input type="time" class="form-control" id="inputEmail3" placeholder="Email">
-                            </div>
-                        </div>
-                    </div>
-                  </div>
+            <div id="sunday-card" class="col-sm-3">
             </div>
         </div>
         <div class="row mt-3">
@@ -279,6 +84,7 @@
             </div>
         </div>    
     </main>
+    <script src="../utils/const.js"></script>
     <script src="../utils/utils.js"></script>
     <script src="options.js"></script>
 </body>
