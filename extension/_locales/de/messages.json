@@ -89,5 +89,11 @@
     },
     "acknowledgment" : {
         "message" : "Basierend auf dem Greasemonkey-Skript von "
+    },
+    "optionsSaved" : {
+        "message" : "Einstellungen gespeichert."
+    },
+    "optionsRestored" : {
+        "message" : "Einstellungen zurückgesetzt."
     }
 }

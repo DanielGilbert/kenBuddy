@@ -42,10 +42,10 @@ async function fillCurrentWeek(statusContainer) {
     await saveObjectInLocalStorage(ENTROPY_MINUTES, localEntropyMinutes);
   }
 
-  localAllowPrefill = await getObjectFromLocalStorage(ALLOW_PREFILL);
+  localAllowPrefill = await getObjectFromLocalStorage(SHOW_FILL_MONTH);
   if (!localAllowPrefill) {
-    localAllowPrefill = DEFAULT_ALLOW_PREFILL;
-    await saveObjectInLocalStorage(ALLOW_PREFILL, localAllowPrefill);
+    localAllowPrefill = DEFAULT_SHOW_FILL_MONTH;
+    await saveObjectInLocalStorage(SHOW_FILL_MONTH, localAllowPrefill);
   }
 
   /* Add button */

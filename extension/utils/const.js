@@ -6,11 +6,17 @@ const DEFAULT_SCHEDULE = {
     4: [{ start: '8:00', hours: '8:00', pause: '00:30' }],
     5: [{ start: '8:00', hours: '8:00', pause: '00:30' }]
   };
+
+const weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   
 const DEFAULT_ENTROPY_MINUTES = 20;
-const DEFAULT_ALLOW_PREFILL = false;
+const DEFAULT_SHOW_FILL_MONTH = false;
+const DEFAULT_SHOW_FILL_WEEK = true;
+const DEFAULT_SHOW_FILL_DAY = false;
 
-const ALLOW_PREFILL = 'ALLOW_PREFILL';
+const SHOW_FILL_MONTH = 'ALLOW_PREFILL';
+const SHOW_FILL_WEEK = 'SHOW_FILL_WEEK';
+const SHOW_FILL_DAY = 'SHOW_FILL_DAY';
 const ENTROPY_MINUTES = 'ENTROPY_MINUTES';
 const SCHEDULE = 'SCHEDULE';
 

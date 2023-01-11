@@ -5,16 +5,40 @@ function timeToDate(timeString){
 // Saves options to chrome.storage
 async function save_options() {
     var entropy = document.getElementById('entropy').value;
-    //var schedule = JSON.parse(document.getElementById('schedule').value);
-    var showMonth = document.getElementById('showMonthInput').checked;
+    var schedule = await getObjectFromLocalStorage('SCHEDULE');
 
-    await saveObjectInLocalStorage('ENTROPY_MINUTES', entropy);
-    //await saveObjectInLocalStorage('SCHEDULE', schedule);
-    await saveObjectInLocalStorage('ALLOW_PREFILL', showMonth);
+    var count = 0;
+
+    for(let weekday of weekdays)
+    {
+        if (await isScheduleActive(weekday))
+        {
+            var result = await getScheduleFromCard(weekday);
+            if (schedule.count == null)           
+            schedule[count.toString()] = new Array({start: result.start, pause: result.pause, hours: result.hours}) ;
+        }
+        else
+        {
+            if (schedule[count] != null){
+                schedule[count] = null;
+            }
+        }
+        count++;
+    }
+
+    var showMonth = document.getElementById('showMonthInput').checked;
+    var showWeek = document.getElementById('showWeekInput').checked;
+    var showDay = document.getElementById('showDayInput').checked;
+
+    await saveObjectInLocalStorage(ENTROPY_MINUTES, entropy);
+    await saveObjectInLocalStorage(SCHEDULE, schedule);
+    await saveObjectInLocalStorage(SHOW_FILL_MONTH, showMonth);
+    await saveObjectInLocalStorage(SHOW_FILL_WEEK, showWeek);
+    await saveObjectInLocalStorage(SHOW_FILL_DAY, showDay);
 
     // Update status to let user know options were saved.
     var status = document.getElementById('statusDiv');
-    status.textContent = 'Options saved.';
+    status.textContent = browser.i18n.getMessage('optionsSaved');
     setTimeout(function() {
         status.textContent = '';
     }, 750);
@@ -27,22 +51,34 @@ async function reset_to_defaults() {
 
     // Update status to let user know options were saved.
     var status = document.getElementById('statusDiv');
-    status.textContent = 'Options restored.';
+    status.textContent = browser.i18n.getMessage('optionsRestored');
     setTimeout(function() {
         status.textContent = '';
     }, 750);
 }
 
 async function set_defaults(){
-    await saveObjectInLocalStorage('ENTROPY_MINUTES', DEFAULT_ENTROPY_MINUTES);
-    await saveObjectInLocalStorage('SCHEDULE', DEFAULT_SCHEDULE);
-    await saveObjectInLocalStorage('ALLOW_PREFILL', DEFAULT_ALLOW_PREFILL);
+    await saveObjectInLocalStorage(ENTROPY_MINUTES, DEFAULT_ENTROPY_MINUTES);
+    await saveObjectInLocalStorage(SCHEDULE, DEFAULT_SCHEDULE);
+    await saveObjectInLocalStorage(SHOW_FILL_MONTH, DEFAULT_SHOW_FILL_MONTH);
+    await saveObjectInLocalStorage(SHOW_FILL_WEEK, DEFAULT_SHOW_FILL_WEEK);
+    await saveObjectInLocalStorage(SHOW_FILL_DAY, DEFAULT_SHOW_FILL_DAY);
 }
 
-function changeBorderOnClick(element){
-    if (element.checked != null){
+function setScheduleValues(weekdayItem){
+    setScheduleForCard('08:00', '00:30', '08:00', weekdayItem);
+}
 
-    } 
+function resetScheduleValues(weekdayItem){
+    setScheduleForCard('', '', '', weekdayItem);
+}
+
+function toggleTimeOnClick(element){
+    if (element.currentTarget.checked){
+        setScheduleValues(element.currentTarget.getAttribute("data-weekday"));
+    } else {
+        resetScheduleValues(element.currentTarget.getAttribute("data-weekday"));
+    }
 }
 
 async function createFormCheckRow(weekdayItem){
@@ -60,7 +96,8 @@ async function createFormCheckRow(weekdayItem){
     rowFormInputElement.type = 'checkbox';
     rowFormInputElement.id = weekdayItem + '-isActive';
     rowFormInputElement.setAttribute('aria-describedby', weekdayItem + '-isActiveHelp');
-    rowFormInputElement.addEventListener('click', changeBorderOnClick);
+    rowFormInputElement.setAttribute('data-weekday', weekdayItem);
+    rowFormInputElement.addEventListener('change', toggleTimeOnClick);
 
     let rowFormLabelElement = document.createElement('label');
     rowFormLabelElement.className = 'form-check-label';
@@ -138,6 +175,11 @@ async function createScheduleLayout(){
 }
 
 function padTimeIfNeeded(time){
+    if (time == '' || time == null)
+    {
+        return '';
+    }
+
     let values = time.split(':');
     
     let hours = parseInt(values[0]);
@@ -149,23 +191,46 @@ function padTimeIfNeeded(time){
     return hoursResult + ':' + minutesResult;
 }
 
-async function setScheduleForCard(scheduleItem, weekday){
+async function setScheduleForCard(start, pause, hours, weekday){
     var activeSwitch = document.getElementById(weekday + '-isActive');
-    activeSwitch.checked = 'checked';
+    if (start != '' && pause != '' && hours != '')
+    {
+        activeSwitch.checked = true;
+    }
+    else
+    {
+        activeSwitch.checked = false;
+    }
 
     var startInput =  document.getElementById(weekday + '-start-timeInput');
-    startInput.value = padTimeIfNeeded(scheduleItem[0].start);
+    startInput.value = padTimeIfNeeded(start);
 
     var pauseInput =  document.getElementById(weekday + '-pause-timeInput');
-    pauseInput.value = padTimeIfNeeded(scheduleItem[0].pause);
+    pauseInput.value = padTimeIfNeeded(pause);
 
     var hoursInput =  document.getElementById(weekday + '-hours-timeInput');
-    hoursInput.value = padTimeIfNeeded(scheduleItem[0].hours);
+    hoursInput.value = padTimeIfNeeded(hours);
+}
+
+async function isScheduleActive(weekday){
+    var activeSwitch = document.getElementById(weekday + '-isActive');
+    return activeSwitch.checked;
+}
+
+async function getScheduleFromCard(weekday){
+    var startInput =  document.getElementById(weekday + '-start-timeInput');
+    var pauseInput =  document.getElementById(weekday + '-pause-timeInput');
+    var hoursInput =  document.getElementById(weekday + '-hours-timeInput');
+
+    schedule = {};
+    schedule.start = startInput.value;
+    schedule.pause = pauseInput.value;
+    schedule.hours = hoursInput.value;
+
+    return schedule;
 }
 
 async function setSchedule(schedule){
-    let weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-
     var i = 0;
 
     for(let singleWeekday of weekdays){
@@ -174,7 +239,7 @@ async function setSchedule(schedule){
             continue;
         }
        
-        await setScheduleForCard(schedule[i], singleWeekday);
+        await setScheduleForCard(schedule[i][0].start, schedule[i][0].pause, schedule[i][0].hours, singleWeekday);
         i++;
     }
 }
@@ -182,22 +247,52 @@ async function setSchedule(schedule){
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
 async function restore_options() {
-    let entropy_minutes = await getObjectFromLocalStorage('ENTROPY_MINUTES');
-    let schedule = await getObjectFromLocalStorage('SCHEDULE');
-    let allowPrefill = await getObjectFromLocalStorage('ALLOW_PREFILL');
+    let entropyMinutes = await getObjectFromLocalStorage(ENTROPY_MINUTES);
+    let schedule = await getObjectFromLocalStorage(SCHEDULE);
+    let showFillMonth = await getObjectFromLocalStorage(SHOW_FILL_MONTH);
+    let showFillWeek = await getObjectFromLocalStorage(SHOW_FILL_WEEK);
+    let showFillDay = await getObjectFromLocalStorage(SHOW_FILL_DAY);
+    
+    if (showFillWeek == null || entropyMinutes == null || schedule == null || showFillMonth == null || showFillWeek == null || showFillDay == null){
+               
+        if (entropyMinutes == null)
+        {
+            await saveObjectInLocalStorage(ENTROPY_MINUTES, DEFAULT_ENTROPY_MINUTES);
+        }
 
-    if (entropy_minutes == null || schedule == null || allowPrefill == null){
-        await set_defaults();
+        if (schedule == null)
+        {
+            await saveObjectInLocalStorage(SCHEDULE, DEFAULT_SCHEDULE);
+        }
 
-        entropy_minutes = await getObjectFromLocalStorage('ENTROPY_MINUTES');
-        schedule = await getObjectFromLocalStorage('SCHEDULE');
-        allowPrefill = await getObjectFromLocalStorage('ALLOW_PREFILL');
+        if (showFillMonth == null)
+        {
+            await saveObjectInLocalStorage(SHOW_FILL_MONTH, DEFAULT_SHOW_FILL_MONTH);
+        }
+
+        if (showFillWeek == null)
+        {
+            await saveObjectInLocalStorage(SHOW_FILL_WEEK, DEFAULT_SHOW_FILL_WEEK);
+        }
+
+        if (showFillDay == null)
+        {
+            await saveObjectInLocalStorage(SHOW_FILL_DAY, DEFAULT_SHOW_FILL_DAY);
+        }
+
+        entropyMinutes = await getObjectFromLocalStorage(ENTROPY_MINUTES);
+        schedule = await getObjectFromLocalStorage(SCHEDULE);
+        showFillMonth = await getObjectFromLocalStorage(SHOW_FILL_MONTH);
+        showFillWeek = await getObjectFromLocalStorage(SHOW_FILL_WEEK);
+        showFillDay = await getObjectFromLocalStorage(SHOW_FILL_DAY);
     }
 
-    document.getElementById('entropy').value = entropy_minutes;
     await setSchedule(schedule);
-    //document.getElementById('schedule').value = schedule;
-    document.getElementById('showMonthInput').checked = allowPrefill;
+
+    document.getElementById('entropy').value = entropyMinutes;
+    document.getElementById('showMonthInput').checked = showFillMonth;
+    document.getElementById('showDayInput').checked = showFillDay;
+    document.getElementById('showWeekInput').checked = showFillWeek;
 }
 
 async function loadLocalizations(){

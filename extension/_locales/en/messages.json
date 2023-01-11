@@ -89,5 +89,11 @@
     },
     "acknowledgment" : {
         "message" : "Based on the Greasemonkey script by "
+    },
+    "optionsSaved" : {
+        "message" : "Options saved."
+    },
+    "optionsRestored" : {
+        "message" : "Options restored."
     }
 }
