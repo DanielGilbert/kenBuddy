@@ -1,0 +1,28 @@
+.btn-group-kenbuddy button {
+    background-color: white; /* Green background */
+    border: 1px solid #5993e3; /* Green border */
+    color: #5993e3; /* text */
+    padding: 4px 8px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    float: center; /* Float the buttons side by side */
+  }
+  
+  /* Clear floats (clearfix hack) */
+  .btn-group-kenbuddy:after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  
+  /* Add a background color on hover */
+  .btn-group-kenbuddy button:hover {
+    background-color: #5993e3;
+    color: white;
+    border: 1px solid #5993e3;
+  }
+
+  .btn-group-kenbuddy button:disabled {
+    background-color: #f8f8f8;
+    color: #c4c4c4;
+    border: 1px solid #dedede;
+  }
