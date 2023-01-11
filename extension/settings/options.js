@@ -2,6 +2,8 @@ function timeToDate(timeString){
     return new Date(Date.parse(timeString))
 }
 
+const removeProperty = (prop, { [prop]: exclProp, ...rest }) => rest;
+
 // Saves options to chrome.storage
 async function save_options() {
     var entropy = document.getElementById('entropy').value;
@@ -20,7 +22,7 @@ async function save_options() {
         else
         {
             if (schedule[count] != null){
-                schedule[count] = null;
+                schedule = removeProperty(count.toString(), schedule);
             }
         }
         count++;

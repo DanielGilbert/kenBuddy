@@ -4,12 +4,16 @@
         "description" : "Description of the extension."
     },
     "fillAttendanceTodayTitle" : {
-        "message" : "Für Heute ausfüllen",
+        "message" : "Heute ausfüllen",
         "description" : "Title for filling attendance for today"
     },
     "fillAttendanceWeekTitle" : {
-        "message" : "Für die Woche ausfüllen",
+        "message" : "Woche ausfüllen",
         "description" : "Title for filling attendance for the week"
+    },
+    "fillAttendanceMonthTitle" : {
+        "message" : "Monat ausfüllen",
+        "description" : "Title for filling attendance for the month"
     },
     "attendanceFilledTitle" : {
         "message" : "Alles erledigt",
@@ -64,10 +68,10 @@
         "message" : "kenBuddy Einstellungen"
     },
     "showMonth" : {
-        "message" : "Für den gesamten Monat anzeigen"
+        "message" : "Für gesamten Monat anzeigen"
     },
     "showMonthExplanation" : {
-        "message" : "Dadurch wird die Schaltfläche zum Ausfüllen des gesamten Monats angezeigt. Verwendung auf eigene Gefahr!"
+        "message" : "Dadurch wird die Schaltfläche zum Ausfüllen des gesamten Monats angezeigt. Einträge, die im Vorfeld ausgefüllt wurden, können erst am jeweiligen Tag bearbeitet werden."
     },
     "showDay" : {
         "message" : "Für einen Tag anzeigen"
@@ -76,10 +80,10 @@
         "message" : "Hier wird die Schaltfläche zum Füllen eines einzelnen Tages angezeigt."
     },
     "showWeek" : {
-        "message" : "Für Woche anzeigen"
+        "message" : "Für gesamte Woche anzeigen"
     },
     "showWeekExplanation" : {
-        "message" : "Dadurch wird die Schaltfläche zum Ausfüllen der gesamten Woche angezeigt."
+        "message" : "Dadurch wird die Schaltfläche zum Ausfüllen der gesamten Woche angezeigt. Einträge, die im Vorfeld ausgefüllt wurden, können erst am jeweiligen Tag bearbeitet werden."
     },
     "entropy" : {
         "message" : "Entropie (0 - 59)"

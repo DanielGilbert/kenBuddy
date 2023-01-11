@@ -58,8 +58,12 @@ async function userHasEntryFor(auth, user, date) {
 }
 
 /* HELPERS */
-function singleDay(date) {
+function startOfDay(date) {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
+}
+
+function endOfDay(date) {
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999));
 }
 
 function startOfMonth(date) {
@@ -76,12 +80,12 @@ function hhmmToMinutes(str) {
 
 Date.prototype.getStartOfWeek = function() {
   var date = new Date(this.setDate(this.getDate() - this.getDay()));
-  return singleDay(date);
+  return startOfDay(date);
 }
 
 Date.prototype.getEndOfWeek = function() {
   var date = new Date(this.setDate(this.getDate() - this.getDay() + 6));
-  return singleDay(date);
+  return startOfDay(date);
 }
 
 const checkElement = async selector => {

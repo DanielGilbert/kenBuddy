@@ -14,6 +14,7 @@
     },
     "permissions": ["storage"],
     "content_scripts": [{
+        "css": ["css/kenbuddy.css"],
         "js": ["chrome/utils.js","utils/const.js","utils/utils.js","utils/calls.js","utils/fill.js","kenbuddy.js"],
         "matches": ["https://app.kenjo.io/*"]
     }],

@@ -1,8 +1,4 @@
-var localSchedule = {};
-var localEntropyMinutes = 0;
-var localAllowPrefill = false;
-
-async function fillFor(statusContainer, fromDate, toDate) {
+async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEntropyMinutes) {
   try {
     /* Get user info */
     statusContainer.innerText = "Getting user info...";

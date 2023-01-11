@@ -4,12 +4,16 @@
         "description" : "Description of the extension."
     },
     "fillAttendanceTodayTitle" : {
-        "message" : "Fill for today",
+        "message" : "Fill today",
         "description" : "Title for filling attendance for today"
     },
     "fillAttendanceWeekTitle" : {
-        "message" : "Fill for the week",
+        "message" : "Fill week",
         "description" : "Title for filling attendance for the week"
+    },
+    "fillAttendanceMonthTitle" : {
+        "message" : "Fill month",
+        "description" : "Title for filling attendance for the month"
     },
     "attendanceFilledTitle" : {
         "message" : "Everything done",
@@ -67,7 +71,7 @@
         "message" : "Show for complete month"
     },
     "showMonthExplanation" : {
-        "message" : "This will show the button to fill the complete month. Use at your own risk!"
+        "message" : "This will show the button to fill the complete month. Entries filled in advance cannot be undone before the respective day has been reached."
     },
     "showDay" : {
         "message" : "Show for single day"
@@ -76,10 +80,10 @@
         "message" : "This will show the button to fill a single day."
     },
     "showWeek" : {
-        "message" : "Show for week"
+        "message" : "Show for entire week"
     },
     "showWeekExplanation" : {
-        "message" : "This will show the button to fill the whole week."
+        "message" : "This will show the button to fill the whole week. Entries filled in advance cannot be undone before the respective day has been reached."
     },
     "entropy" : {
         "message" : "Entropy (0 - 59)"
