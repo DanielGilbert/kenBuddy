@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.4] - 2022-01-11
+
 ### Added
 
 - Completely new Settings UI
 - Ability to fill the attendance for the whole week
-- Localization for Settings has been completed
+- Localization has been completed
 
 ### Changed
 
@@ -19,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixes an issue where the button won't appear after logging in
+- Fixes an issue where the buttons won't appear after logging in
 
 ### Maintenance
 
@@ -72,7 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to fill the attendance sheet for a month
 - Ability to fill the attendance sheet for a day
 
-[unreleased]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.3...HEAD
+[unreleased]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.3...0.1.4
 [0.1.3]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.1...v0.1.3
 [0.1.2]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.0...v0.1.1

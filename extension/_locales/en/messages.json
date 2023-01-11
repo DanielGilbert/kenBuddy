@@ -94,6 +94,9 @@
     "acknowledgment" : {
         "message" : "Based on the Greasemonkey script by "
     },
+    "acknowledgmentSelf" : {
+        "message" : "Made with 💙 and ☕ by "
+    },
     "optionsSaved" : {
         "message" : "Options saved."
     },

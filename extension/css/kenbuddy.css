@@ -7,10 +7,6 @@
     float: center; /* Float the buttons side by side */
   }
   
-  .btn-group-kenbuddy button:not(:last-child) {
-    /*border-right: none; Prevent double borders */
-  }
-  
   /* Clear floats (clearfix hack) */
   .btn-group-kenbuddy:after {
     content: "";
