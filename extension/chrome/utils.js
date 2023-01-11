@@ -19,3 +19,7 @@ async function fetchUrl(auth, url, method = 'GET', body = null) {
       throw new Error(`Failed performing request, reload the site and try again.\n\n${method} ${url}\n${err}`);
     }
   }
+
+  if (typeof browser === "undefined") {
+    var browser = chrome;
+  }
