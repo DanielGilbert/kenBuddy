@@ -18,14 +18,14 @@ async function fillToday(statusContainer, schedule, entropyMinutes) {
 async function fillCurrentMonth(statusContainer, schedule, entropyMinutes) {
   let currentDate = new Date();
   const monthStart = startOfMonth(currentDate);
-  const endOfToday = endOfDay(date);
+  const endOfToday = endOfDay(currentDate);
   await fillFor(statusContainer, monthStart, endOfToday, schedule, entropyMinutes);
 }
 
 async function fillCurrentWeek(statusContainer, schedule, entropyMinutes) {
   let currentDate = new Date();
   const weekStart = currentDate.getStartOfWeek();
-  const endOfToday = endOfDay(date);
+  const endOfToday = endOfDay(currentDate);
   await fillFor(statusContainer, weekStart, endOfToday, schedule, entropyMinutes);
 }
 
