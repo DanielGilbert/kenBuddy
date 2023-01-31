@@ -74,18 +74,18 @@ function endOfMonth(date) {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999));
 }
 
+function getStartOfWeek(date) {
+  var currentDate = startOfDay(date);
+  return new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
+}
+
+function getEndOfWeek(date) {
+  var currentDate = endOfDay(date);
+  return new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 6));
+}
+
 function hhmmToMinutes(str) {
   return str.split(':').reduce((acc, curr) => (acc*60) + +curr);
-}
-
-Date.prototype.getStartOfWeek = function() {
-  var date = new Date(this.setDate(this.getDate() - this.getDay()));
-  return startOfDay(date);
-}
-
-Date.prototype.getEndOfWeek = function() {
-  var date = new Date(this.setDate(this.getDate() - this.getDay() + 6));
-  return startOfDay(date);
 }
 
 const checkElement = async selector => {

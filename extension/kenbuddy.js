@@ -9,24 +9,24 @@
 
 
 async function fillToday(statusContainer, schedule, entropyMinutes) {
-  let date = new Date();
+  var date = new Date();
   const startOfToday = startOfDay(date);
   const endOfToday = endOfDay(date);
   await fillFor(statusContainer, startOfToday, endOfToday, schedule, entropyMinutes);
 }
 
 async function fillCurrentMonth(statusContainer, schedule, entropyMinutes) {
-  let currentDate = new Date();
+  var currentDate = new Date();
   const monthStart = startOfMonth(currentDate);
-  const endOfToday = endOfDay(currentDate);
-  await fillFor(statusContainer, monthStart, endOfToday, schedule, entropyMinutes);
+  const monthEnd = endOfDay(currentDate);
+  await fillFor(statusContainer, monthStart, monthEnd, schedule, entropyMinutes);
 }
 
 async function fillCurrentWeek(statusContainer, schedule, entropyMinutes) {
-  let currentDate = new Date();
-  const weekStart = currentDate.getStartOfWeek();
-  const endOfToday = endOfDay(currentDate);
-  await fillFor(statusContainer, weekStart, endOfToday, schedule, entropyMinutes);
+  var currentDate = new Date();
+  const weekStart = getStartOfWeek(currentDate);
+  const weekEnd = endOfDay(currentDate);
+  await fillFor(statusContainer, weekStart, weekEnd, schedule, entropyMinutes);
 }
 
 var localSchedule = {};
@@ -34,6 +34,7 @@ var localEntropyMinutes = 0;
 var showFillMonth = false;
 var showFillWeek = true;
 var showFillToday = false;
+var allowEntriesInTheFuture = false;
 
 (async function() {
   /* Make schedule and entropy configurable */
@@ -103,13 +104,14 @@ var showFillToday = false;
     let date = new Date();
     const today = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
 
-    const startOfWeek = date.getStartOfWeek();
+    const startOfWeek = getStartOfWeek(date);
+    const endOfWeek = endOfDay(date);
     let auth = await getAuth();
     let user = await getUser(auth);
     hasEntryForToday = await userHasEntryFor(auth, user.ownerId, today);
 
     var count = 0;
-    for (let day = startOfWeek; day <= today; day.setDate(day.getDate() + 1)) {
+    for (let day = startOfWeek; day <= endOfWeek; day.setDate(day.getDate() + 1)) {
       let result = await userHasEntryFor(auth, user.ownerId, day)
       if (!result && localSchedule[count.toString()] != null){
         hasEntryForCurrentWeek = false;
