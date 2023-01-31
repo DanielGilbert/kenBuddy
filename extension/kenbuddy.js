@@ -9,23 +9,23 @@
 
 
 async function fillToday(statusContainer, schedule, entropyMinutes) {
-  let date = new Date();
+  var date = new Date();
   const startOfToday = startOfDay(date);
   const endOfToday = endOfDay(date);
   await fillFor(statusContainer, startOfToday, endOfToday, schedule, entropyMinutes);
 }
 
 async function fillCurrentMonth(statusContainer, schedule, entropyMinutes) {
-  let currentDate = new Date();
+  var currentDate = new Date();
   const monthStart = startOfMonth(currentDate);
-  const monthEnd = endOfMonth(currentDate);
+  const monthEnd = endOfDay(currentDate);
   await fillFor(statusContainer, monthStart, monthEnd, schedule, entropyMinutes);
 }
 
 async function fillCurrentWeek(statusContainer, schedule, entropyMinutes) {
-  let currentDate = new Date();
-  const weekStart = currentDate.getStartOfWeek();
-  const weekEnd = currentDate.getEndOfWeek();
+  var currentDate = new Date();
+  const weekStart = getStartOfWeek(currentDate);
+  const weekEnd = endOfDay(currentDate);
   await fillFor(statusContainer, weekStart, weekEnd, schedule, entropyMinutes);
 }
 
@@ -34,6 +34,7 @@ var localEntropyMinutes = 0;
 var showFillMonth = false;
 var showFillWeek = true;
 var showFillToday = false;
+var allowEntriesInTheFuture = false;
 
 (async function() {
   /* Make schedule and entropy configurable */
@@ -103,8 +104,8 @@ var showFillToday = false;
     let date = new Date();
     const today = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
 
-    const startOfWeek = date.getStartOfWeek();
-    const endOfWeek = date.getEndOfWeek();
+    const startOfWeek = getStartOfWeek(date);
+    const endOfWeek = endOfDay(date);
     let auth = await getAuth();
     let user = await getUser(auth);
     hasEntryForToday = await userHasEntryFor(auth, user.ownerId, today);
