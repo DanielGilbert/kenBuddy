@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.5] - 2022-01-31
+
+### Changed
+
+- Prevents filling the whole week or month in advance.
+
 ## [0.1.4] - 2022-01-11
 
 ### Added
