@@ -6,7 +6,6 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
     const user = await getUser(auth);
 
     statusContainer.innerText = "Getting user time off...";
-    const timeOff = await getUserTimeOff(auth, user.ownerId, fromDate.toISOString(), toDate.toISOString());
 
     /* Get calendar info */
     statusContainer.innerText = "Getting user calendar...";
@@ -18,14 +17,6 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
     /* Parse non working days */
     statusContainer.innerText = "Processing non working days...";
     const nonWorkingDays = [];
-
-    timeOff.forEach((t) => {
-      nonWorkingDays.push({
-        reason: t._policyName,
-        start: new Date(Date.parse(t._from)),
-        end: new Date(Date.parse(t._to))
-      });
-    });
 
     template.holidays.forEach((h) => {
       const start = new Date(Date.parse(`${h.holidayDate}T00:00:00.000Z`));

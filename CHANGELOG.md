@@ -7,13 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [0.1.5] - 2022-01-31
+## [0.1.6] - 2023-03-17
+
+### Fixed
+
+- The `TIMEOFF_URL` endpoint has been removed. For now, the call simply gets skipped, but functionality should be included soon after.
+
+## [0.1.5] - 2023-01-31
 
 ### Changed
 
 - Prevents filling the whole week or month in advance.
 
-## [0.1.4] - 2022-01-11
+## [0.1.4] - 2023-01-11
 
 ### Added
 
@@ -33,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Code has been refactored
 
-## [0.1.3] - 2022-01-04
+## [0.1.3] - 2023-01-04
 
 ### Added
 
@@ -43,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renames extensions
 
-## [0.1.2] - 2022-01-03
+## [0.1.2] - 2023-01-03
 
 ### Added
 
@@ -55,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modified the logo
 - Extended the Readme
 
-## [0.1.1] - 2022-01-03
+## [0.1.1] - 2023-01-03
 
 ### Added
 
@@ -73,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [Chrome] Settings are now filled after first launch
 
-## [0.1.0] - 2022-01-02
+## [0.1.0] - 2023-01-02
 
 ### Added
 
