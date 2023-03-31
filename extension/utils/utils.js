@@ -76,12 +76,12 @@ function endOfMonth(date) {
 
 function getStartOfWeek(date) {
   var currentDate = startOfDay(date);
-  return new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
+  return new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 1));
 }
 
 function getEndOfWeek(date) {
   var currentDate = endOfDay(date);
-  return new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 6));
+  return new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 7));
 }
 
 function hhmmToMinutes(str) {
