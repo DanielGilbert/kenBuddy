@@ -113,7 +113,7 @@ var allowEntriesInTheFuture = false;
     var count = 0;
     for (let day = startOfWeek; day <= endOfWeek; day.setDate(day.getDate() + 1)) {
       let result = await userHasEntryFor(auth, user.ownerId, day)
-      if (!result && localSchedule[count.toString()] != null){
+      if (!result && ((day.getDay() in localSchedule) && localSchedule[day.getDay()].length != 0)){
         hasEntryForCurrentWeek = false;
         break;
       }
