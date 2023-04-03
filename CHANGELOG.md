@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.8] - 2023-04-03
+
+### Fixed
+
+- Changes to the DST handling introduced an issue where the schedule day was offset by one.
+
 ## [0.1.7] - 2023-03-31
 
 ### Fixed
