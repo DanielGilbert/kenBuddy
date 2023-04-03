@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.8] - 2023-04-03
+
+### Fixed
+
+- Changes to the DST handling introduced an issue where the schedule day was offset by one.
+
 ## [0.1.7] - 2023-03-31
 
 ### Fixed
@@ -92,8 +98,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to fill the attendance sheet for a month
 - Ability to fill the attendance sheet for a day
 
-[unreleased]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.4...HEAD
-[0.1.4]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.3...0.1.4
+[unreleased]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.8...HEAD
+[0.1.8]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.7...v0.1.8
+[0.1.7]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.6...v0.1.7
+[0.1.6]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.5...v0.1.6
+[0.1.5]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.4...v0.1.5
+[0.1.4]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.1...v0.1.3
 [0.1.2]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.0...v0.1.1
