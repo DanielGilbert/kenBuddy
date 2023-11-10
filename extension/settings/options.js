@@ -122,13 +122,22 @@ async function createFormInputRow(weekdayItem, label, type){
     rowDiv.className = "form-group row";
     
     let rowColDiv = document.createElement('div');
-    rowColDiv.className = 'col-sm';
+    rowColDiv.className = 'col-sm input-group';
 
     let rowFormInputElement = document.createElement('input');
     rowFormInputElement.className = 'form-control form-input';
-    rowFormInputElement.type = 'time';
+    rowFormInputElement.type = 'text';
     rowFormInputElement.id = weekdayItem + '-' + type + '-timeInput';
     rowFormInputElement.setAttribute('aria-describedby', weekdayItem + '-' + type + '-timeInputLabel');
+    let durationPicker = new Durationpicker(rowFormInputElement, Durationpicker.defaults);
+
+    let addOnFormElement = document.createElement('span');
+    addOnFormElement.className="input-group-text";
+
+    let informationElement = document.createElement('i');
+    informationElement.className="bi bi-clock";
+
+    addOnFormElement.append(informationElement);
 
     let rowFormLabelElement = document.createElement('label');
     rowFormLabelElement.className = 'col-4 col-form-label';
@@ -137,6 +146,7 @@ async function createFormInputRow(weekdayItem, label, type){
     rowFormLabelElement.innerText = label;
 
     rowColDiv.append(rowFormInputElement);
+    rowColDiv.append(addOnFormElement);
 
     rowDiv.append(rowFormLabelElement);
     rowDiv.append(rowColDiv);
