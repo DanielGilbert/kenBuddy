@@ -52,8 +52,11 @@
     "start" : {
         "message" : "Start"
     },
+    "pauseStart" : {
+        "message" : "Start of Pause"
+    },
     "pause" : {
-        "message" : "Pause"
+        "message" : "Pause duration"
     },
     "hours" : {
         "message" : "Hours"

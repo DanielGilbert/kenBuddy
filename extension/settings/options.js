@@ -68,7 +68,7 @@ async function set_defaults(){
 }
 
 function setScheduleValues(weekdayItem){
-    setScheduleForCard('08:00', '00:30', '08:00', weekdayItem);
+    setScheduleForCard('08:00', '12:00', '00:30', '08:00', weekdayItem);
 }
 
 function resetScheduleValues(weekdayItem){
@@ -125,7 +125,7 @@ async function createFormInputRow(weekdayItem, label, type){
     rowColDiv.className = 'col-sm';
 
     let rowFormInputElement = document.createElement('input');
-    rowFormInputElement.className = 'form-control';
+    rowFormInputElement.className = 'form-control form-input';
     rowFormInputElement.type = 'time';
     rowFormInputElement.id = weekdayItem + '-' + type + '-timeInput';
     rowFormInputElement.setAttribute('aria-describedby', weekdayItem + '-' + type + '-timeInputLabel');
@@ -146,7 +146,7 @@ async function createFormInputRow(weekdayItem, label, type){
 
 async function createScheduleLayout(){
     const weekdayCards = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-    const timeEdits = ["start", "pause", "hours"];
+    const timeEdits = ["start", "pauseStart", "pause", "hours"];
 
     for (let weekdayItem of weekdayCards){
         let item = document.getElementById(weekdayItem + '-card');
@@ -176,26 +176,9 @@ async function createScheduleLayout(){
     }
 }
 
-function padTimeIfNeeded(time){
-    if (time == '' || time == null)
-    {
-        return '';
-    }
-
-    let values = time.split(':');
-    
-    let hours = parseInt(values[0]);
-    let minutes = parseInt(values[1]);
-    
-    let hoursResult = hours < 10 ? '0' + hours : hours;
-    let minutesResult = minutes < 10 ? '0' + minutes : minutes;
-    
-    return hoursResult + ':' + minutesResult;
-}
-
-async function setScheduleForCard(start, pause, hours, weekday){
+async function setScheduleForCard(start, pauseStart, pause, hours, weekday){
     var activeSwitch = document.getElementById(weekday + '-isActive');
-    if (start != '' && pause != '' && hours != '')
+    if (start != '' && pauseStart != '' && pause != '' && hours != '')
     {
         activeSwitch.checked = true;
     }
@@ -206,6 +189,9 @@ async function setScheduleForCard(start, pause, hours, weekday){
 
     var startInput =  document.getElementById(weekday + '-start-timeInput');
     startInput.value = padTimeIfNeeded(start);
+
+    var pauseStartInput =  document.getElementById(weekday + '-pauseStart-timeInput');
+    pauseStartInput.value = padTimeIfNeeded(pauseStart);
 
     var pauseInput =  document.getElementById(weekday + '-pause-timeInput');
     pauseInput.value = padTimeIfNeeded(pause);
@@ -221,11 +207,13 @@ async function isScheduleActive(weekday){
 
 async function getScheduleFromCard(weekday){
     var startInput =  document.getElementById(weekday + '-start-timeInput');
+    var pauseStartInput = document.getElementById(weekday + '-pauseStart-timeInput');
     var pauseInput =  document.getElementById(weekday + '-pause-timeInput');
     var hoursInput =  document.getElementById(weekday + '-hours-timeInput');
 
     schedule = {};
     schedule.start = startInput.value;
+    schedule.pauseStart = pauseStartInput.value;
     schedule.pause = pauseInput.value;
     schedule.hours = hoursInput.value;
 
@@ -241,7 +229,7 @@ async function setSchedule(schedule){
             continue;
         }
        
-        await setScheduleForCard(schedule[i][0].start, schedule[i][0].pause, schedule[i][0].hours, singleWeekday);
+        await setScheduleForCard(schedule[i][0].start, schedule[i][0].pauseStart, schedule[i][0].pause, schedule[i][0].hours, singleWeekday);
         i++;
     }
 }
