@@ -25,13 +25,12 @@
   left: auto;
   right: 13px;
 }
-.bootstrap-durationpicker .add-on {
+.bootstrap-durationpicker .input-group-text {
   cursor: pointer;
 }
-.bootstrap-durationpicker .add-on i {
+.bootstrap-durationpicker .input-group-text i {
   display: inline-block;
   width: 16px;
-  height: 16px;
 }
 .bootstrap-durationpicker-widget.dropdown-menu {
   padding: 4px;

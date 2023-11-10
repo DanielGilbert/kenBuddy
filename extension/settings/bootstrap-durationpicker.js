@@ -10,12 +10,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
+(function($, window, document, undefined) {
   'use strict';
 
   // DURATIONPICKER PUBLIC CLASS DEFINITION
   var Durationpicker = function(element, options) {
-    this.element = element;
+    this.widget = '';
+    this.$element = $(element);
     this.defaultDuration = options.defaultDuration;
     this.disableFocus = options.disableFocus;
     this.disableMousewheel = options.disableMousewheel;
@@ -40,11 +41,11 @@
     _init: function() {
       var self = this;
 
-      if (this.showWidgetOnAddonClick && (this.element.parent().hasClass('input-append') || this.element.parent().hasClass('input-prepend') || this.element.parent().hasClass('input-group'))) {
-        this.element.parent('.input-append, .input-prepend, .input-group').find('.add-on, .input-group-addon').on({
+      if (this.showWidgetOnAddonClick && (this.$element.parent().hasClass('input-append') || this.$element.parent().hasClass('input-prepend') || this.$element.parent().hasClass('input-group'))) {
+        this.$element.parent('.input-append, .input-prepend, .input-group').find('.input-group-text, .input-group-addon').on({
           'click.durationpicker': $.proxy(this.showWidget, this)
         });
-        this.element.on({
+        this.$element.on({
           'focus.durationpicker': $.proxy(this.highlightUnit, this),
           'click.durationpicker': $.proxy(this.highlightUnit, this),
           'keydown.durationpicker': $.proxy(this.elementKeydown, this),
@@ -53,14 +54,14 @@
         });
       } else {
         if (this.template) {
-          this.element.on({
+          this.$element.on({
             'focus.durationpicker': $.proxy(this.showWidget, this),
             'click.durationpicker': $.proxy(this.showWidget, this),
             'blur.durationpicker': $.proxy(this.blurElement, this),
             'mousewheel.durationpicker DOMMouseScroll.durationpicker': $.proxy(this.mousewheel, this)
           });
         } else {
-          this.element.on({
+          this.$element.on({
             'focus.durationpicker': $.proxy(this.highlightUnit, this),
             'click.durationpicker': $.proxy(this.highlightUnit, this),
             'keydown.durationpicker': $.proxy(this.elementKeydown, this),
@@ -99,7 +100,7 @@
       this.minute = '';
       this.second = '';
 
-      this.element.val('');
+      this.$element.val('');
     },
 
     decrementHour: function() {
@@ -193,7 +194,7 @@
     },
 
     getCursorPosition: function() {
-      var input = this.element.get(0);
+      var input = this.$element.get(0);
 
       if ('selectionStart' in input) {// Standard-compliant browsers
 
@@ -228,12 +229,12 @@
 
       templateContent = (this.customTemplateContent !== false) ? this.customTemplateContent : '<table>'+
          '<tr>'+
-           '<td><a href="#" data-action="incrementHour"><i class="icon-chevron-up"></i></a></td>'+
+           '<td><a href="#" data-action="incrementHour"><i class="bi bi-chevron-up"></i></a></td>'+
            '<td class="separator">&nbsp;</td>'+
-           '<td><a href="#" data-action="incrementMinute"><i class="icon-chevron-up"></i></a></td>'+
+           '<td><a href="#" data-action="incrementMinute"><i class="bi bi-chevron-up"></i></a></td>'+
            (this.showSeconds ?
              '<td class="separator">&nbsp;</td>'+
-             '<td><a href="#" data-action="incrementSecond"><i class="icon-chevron-up"></i></a></td>'
+             '<td><a href="#" data-action="incrementSecond"><i class="bi bi-chevron-up"></i></a></td>'
            : '') +
          '</tr>'+
          '<tr>'+
@@ -246,12 +247,12 @@
            : '') +
          '</tr>'+
          '<tr>'+
-           '<td><a href="#" data-action="decrementHour"><i class="icon-chevron-down"></i></a></td>'+
+           '<td><a href="#" data-action="decrementHour"><i class="bi bi-chevron-down"></i></a></td>'+
            '<td class="separator"></td>'+
-           '<td><a href="#" data-action="decrementMinute"><i class="icon-chevron-down"></i></a></td>'+
+           '<td><a href="#" data-action="decrementMinute"><i class="bi bi-chevron-down"></i></a></td>'+
            (this.showSeconds ?
             '<td class="separator">&nbsp;</td>'+
-            '<td><a href="#" data-action="decrementSecond"><i class="icon-chevron-down"></i></a></td>'
+            '<td><a href="#" data-action="decrementSecond"><i class="bi bi-chevron-down"></i></a></td>'
            : '') +
          '</tr>'+
        '</table>';
@@ -284,7 +285,7 @@
         return '';
       }
 
-      return this.hour + ':' + (this.minute.toString().length === 1 ? '0' + this.minute : this.minute) + (this.showSeconds ? ':' + (this.second.toString().length === 1 ? '0' + this.second : this.second) : '');
+      return (this.hour.toString().length === 1 ? '0' + this.hour : this.hour) + ':' + (this.minute.toString().length === 1 ? '0' + this.minute : this.minute) + (this.showSeconds ? ':' + (this.second.toString().length === 1 ? '0' + this.second : this.second) : '');
     },
 
     hideWidget: function() {
@@ -292,7 +293,7 @@
         return;
       }
 
-      this.element.trigger({
+      this.$element.trigger({
         'type': 'hide.durationpicker',
         'duration': {
           'value': this.getDuration(),
@@ -319,10 +320,8 @@
       var hourLength = 2;
       if (this.hour >= 100) {
         hourLength = 3;
-      } else if (self.hour < 10) {
-        hourLength = 1
       }
-      
+
       this.position = this.getCursorPosition();
       if (this.position >= 0 && this.position <= hourLength) {
         this.highlightHour();
@@ -372,7 +371,7 @@
     },
 
     highlightHour: function() {
-      var $element = this.element.get(0),
+      var $element = this.$element.get(0),
           self = this;
 
       this.highlightedUnit = 'hour';
@@ -381,8 +380,6 @@
         setTimeout(function() {
           if (self.hour >= 100) {
             $element.setSelectionRange(0,3);
-          } else if (self.hour < 10) {
-            $element.setSelectionRange(0,1);
           } else {
             $element.setSelectionRange(0,2);
           }
@@ -391,7 +388,7 @@
     },
 
     highlightMinute: function() {
-      var $element = this.element.get(0),
+      var $element = this.$element.get(0),
           self = this;
 
       this.highlightedUnit = 'minute';
@@ -400,8 +397,6 @@
         setTimeout(function() {
           if (self.hour >= 100) {
             $element.setSelectionRange(4,6);
-          } else if (self.hour < 10) {
-            $element.setSelectionRange(2,4);
           } else {
             $element.setSelectionRange(3,5);
           }
@@ -410,7 +405,7 @@
     },
 
     highlightSecond: function() {
-      var $element = this.element.get(0),
+      var $element = this.$element.get(0),
           self = this;
 
       this.highlightedUnit = 'second';
@@ -419,8 +414,6 @@
         setTimeout(function() {
           if (self.hour >= 100) {
             $element.setSelectionRange(7,9);
-          } else if (self.hour < 10) {
-            $element.setSelectionRange(5,7);
           } else {
             $element.setSelectionRange(6,8);
           }
@@ -521,10 +514,10 @@
       var widgetWidth = this.$widget.outerWidth(), widgetHeight = this.$widget.outerHeight(), visualPadding = 10, windowWidth =
         $(window).width(), windowHeight = $(window).height(), scrollTop = $(window).scrollTop();
 
-      var zIndex = parseInt(this.element.parents().filter(function() {}).first().css('z-index'), 10) + 10;
-      var offset = this.component ? this.component.parent().offset() : this.element.offset();
-      var height = this.component ? this.component.outerHeight(true) : this.element.outerHeight(false);
-      var width = this.component ? this.component.outerWidth(true) : this.element.outerWidth(false);
+      var zIndex = parseInt(this.$element.parents().filter(function() {}).first().css('z-index'), 10) + 10;
+      var offset = this.component ? this.component.parent().offset() : this.$element.offset();
+      var height = this.component ? this.component.outerHeight(true) : this.$element.outerHeight(false);
+      var width = this.component ? this.component.outerWidth(true) : this.$element.outerWidth(false);
       var left = offset.left, top = offset.top;
 
       this.$widget.removeClass('durationpicker-orient-top durationpicker-orient-bottom durationpicker-orient-right durationpicker-orient-left');
@@ -574,11 +567,11 @@
       if (this.$widget) {
         this.$widget.remove();
       }
-      delete this.element.data().durationpicker;
+      delete this.$element.data().durationpicker;
     },
 
     setDefaultDuration: function(defaultDuration) {
-      if (!this.element.val()) {
+      if (!this.$element.val()) {
         if (defaultDuration === false) {
           this.hour = 0;
           this.minute = 0;
@@ -656,7 +649,7 @@
         return;
       }
 
-      if (this.element.is(':disabled')) {
+      if (this.$element.is(':disabled')) {
         return;
       }
 
@@ -673,7 +666,7 @@
         }
       });
 
-      this.element.trigger({
+      this.$element.trigger({
         'type': 'show.durationpicker',
         'duration': {
           'value': this.getDuration(),
@@ -685,7 +678,7 @@
 
       this.place();
       if (this.disableFocus) {
-        this.element.blur();
+        this.$element.blur();
       }
 
       // widget shouldn't be empty on open
@@ -714,7 +707,7 @@
         this.updateWidget();
       }
 
-      this.element.trigger({
+      this.$element.trigger({
         'type': 'changeDuration.durationpicker',
         'duration': {
           'value': this.getDuration(),
@@ -726,11 +719,11 @@
     },
 
     updateElement: function() {
-      this.element.val(this.getDuration()).change();
+      this.$element.val(this.getDuration()).change();
     },
 
     updateFromElementVal: function() {
-      this.setDuration(this.element.val());
+      this.setDuration(this.$element.val());
     },
 
     updateWidget: function() {
@@ -738,7 +731,7 @@
         return;
       }
 
-      var hour = this.hour,
+      var hour = this.hour.toString().length === 1 ? '0' + this.hour : this.hour,
           minute = this.minute.toString().length === 1 ? '0' + this.minute : this.minute,
           second = this.second.toString().length === 1 ? '0' + this.second : this.second;
 
@@ -849,25 +842,8 @@
     }
   };
 
-  Durationpicker.defaults = {
-    defaultDuration: false,
-    disableFocus: false,
-    disableMousewheel: false,
-    isOpen: false,
-    minuteStep: 15,
-    modalBackdrop: false,
-    orientation: { x: 'auto', y: 'auto'},
-    secondStep: 15,
-    showSeconds: false,
-    showInputs: true,
-    template: 'dropdown',
-    customTemplateContent: false,
-    appendWidgetTo: 'body',
-    showWidgetOnAddonClick: true
-  };
-
   //DURATIONPICKER PLUGIN DEFINITION
-  /*$.fn.durationpicker = function(option) {
+  $.fn.durationpicker = function(option) {
     var args = Array.apply(null, arguments);
     args.shift();
     return this.each(function() {
@@ -890,7 +866,7 @@
     disableFocus: false,
     disableMousewheel: false,
     isOpen: false,
-    minuteStep: 15,
+    minuteStep: 10,
     modalBackdrop: false,
     orientation: { x: 'auto', y: 'auto'},
     secondStep: 15,
@@ -902,4 +878,6 @@
     showWidgetOnAddonClick: true
   };
 
-  $.fn.durationpicker.Constructor = Durationpicker;*/
+  $.fn.durationpicker.Constructor = Durationpicker;
+
+})(jQuery, window, document);
