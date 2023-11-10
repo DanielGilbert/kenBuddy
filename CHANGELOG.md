@@ -109,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to fill the attendance sheet for a day
 
 [unreleased]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.9...HEAD
-[0.1.8]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.8...v0.1.9
+[0.1.9]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.5...v0.1.6
