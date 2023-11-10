@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- #10 Start time for lunch break can now be set. The time will be initialized by the start time of the workday + half the duration of the work day.
+- Start time for lunch break can now be set. The time will be initialized by the start time of the workday + half the duration of the work day.
 
 ### Fixed
 
-- #15 The time input got reworked, and now no longer uses the "time" type to input.
+- The time input got reworked, and now no longer uses the "time" type to input.
 
 ## [0.1.8] - 2023-04-03
 
@@ -108,7 +108,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to fill the attendance sheet for a month
 - Ability to fill the attendance sheet for a day
 
-[unreleased]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.8...HEAD
+[unreleased]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.9...HEAD
+[0.1.8]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.8...v0.1.9
 [0.1.8]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.7...v0.1.8
 [0.1.7]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/DanielGilbert/kenBuddy/compare/v0.1.5...v0.1.6
