@@ -1,11 +1,11 @@
 /* 0 = Sunday, 1 = Monday, ..., 6 = Saturday */
 const DEFAULT_SCHEDULE = {
-    1: [{ start: '8:00', hours: '8:00', pause: '00:30' }],
-    2: [{ start: '8:00', hours: '8:00', pause: '00:30' }],
-    3: [{ start: '8:00', hours: '8:00', pause: '00:30' }],
-    4: [{ start: '8:00', hours: '8:00', pause: '00:30' }],
-    5: [{ start: '8:00', hours: '8:00', pause: '00:30' }]
-  };
+    1: [{ start: '8:00', hours: '8:00', pause: '00:30', pauseStart: '12:00' }],
+    2: [{ start: '8:00', hours: '8:00', pause: '00:30', pauseStart: '12:00' }],
+    3: [{ start: '8:00', hours: '8:00', pause: '00:30', pauseStart: '12:00' }],
+    4: [{ start: '8:00', hours: '8:00', pause: '00:30', pauseStart: '12:00' }],
+    5: [{ start: '8:00', hours: '8:00', pause: '00:30', pauseStart: '12:00' }]
+};
 
 const weekdays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
   

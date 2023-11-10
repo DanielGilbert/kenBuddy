@@ -1,4 +1,34 @@
 /**
+ * Migrate the old Schedule without Pause Start into the new format.
+ * @param {*} obj 
+ * @returns 
+ */
+async function runScheduleWithPauseStartMigration(obj) {
+  try {
+    for(let i = 1; i <= 7; i++)
+    {
+      if (!(i in obj) || obj[i].length == 0)
+        continue;
+
+      var result = obj[i].map(element => {
+      if (!element.hasOwnProperty('pauseStart')) {
+        //Calculate a reasonable pause start time
+        var start = hhmmToMinutes(element.start);
+        var hours = hhmmToMinutes(element.hours) / 2;
+        var pauseStart = start + hours;
+
+        return { ...element, pauseStart: MinutesToHhmm(pauseStart) };
+      }});
+      obj[i] = result;
+    }
+    await saveObjectInLocalStorage(SCHEDULE, obj);
+    return obj;
+    } catch (ex) {
+      console.error(ex);
+  }
+}
+
+/**
  * Retrieve object from Chrome's Local StorageArea
  * @param {string} key 
  */
@@ -86,6 +116,13 @@ function getEndOfWeek(date) {
 
 function hhmmToMinutes(str) {
   return str.split(':').reduce((acc, curr) => (acc*60) + +curr);
+}
+
+function MinutesToHhmm(minutes) {
+
+  var m = minutes % 60;
+  
+  return (minutes-m)/60 + ":" + m;
 }
 
 const checkElement = async selector => {

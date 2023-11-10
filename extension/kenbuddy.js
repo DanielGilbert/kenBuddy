@@ -44,6 +44,8 @@ var allowEntriesInTheFuture = false;
     await saveObjectInLocalStorage(SCHEDULE, localSchedule);
   }
 
+  localSchedule = await runScheduleWithPauseStartMigration(localSchedule);
+
   localEntropyMinutes = await getObjectFromLocalStorage(ENTROPY_MINUTES);
   if (!localEntropyMinutes) {
     localEntropyMinutes = DEFAULT_ENTROPY_MINUTES;
