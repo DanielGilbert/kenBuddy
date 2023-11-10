@@ -69,13 +69,17 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
       localSchedule[day.getDay()].forEach((sch) => {
         const start = hhmmToMinutes(sch.start) + Math.ceil(Math.random() * localEntropyMinutes);
         const pause = hhmmToMinutes(sch.pause);
+        const pauseStart = hhmmToMinutes("12:00") + Math.ceil(Math.random() * localEntropyMinutes);
+        const pauseEnd = pauseStart + pause;
         const end = start + pause + hhmmToMinutes(sch.hours);
 
         entries.push({
           date: day.toISOString(),
           start: start,
           end: end,
-          pause: pause
+          pause: pause,
+          pauseStart: pauseStart,
+          pauseEnd: pauseEnd
         });
       });
     }
@@ -84,7 +88,7 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
     for (const [idx, ts] of entries.entries()) {
       if (! await userHasEntryFor(auth, user.ownerId, ts.date)){
         statusContainer.innerText = `Saving day ${idx+1} of ${entries.length}...`;
-        console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause));
+        console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause, ts.pauseStart, ts.pauseEnd));
       }
     }
 

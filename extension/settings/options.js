@@ -17,7 +17,7 @@ async function save_options() {
         {
             var result = await getScheduleFromCard(weekday);
             if (schedule.count == null)           
-            schedule[count.toString()] = new Array({start: result.start, pause: result.pause, hours: result.hours}) ;
+            schedule[count.toString()] = new Array({start: result.start, startPause: result.startPause, pause: result.pause, hours: result.hours}) ;
         }
         else
         {
@@ -68,11 +68,11 @@ async function set_defaults(){
 }
 
 function setScheduleValues(weekdayItem){
-    setScheduleForCard('08:00', '00:30', '08:00', weekdayItem);
+    setScheduleForCard('08:00', '12:00', '00:30', '08:00', weekdayItem, false);
 }
 
 function resetScheduleValues(weekdayItem){
-    setScheduleForCard('', '', '', weekdayItem);
+    setScheduleForCard('', '', '', '', weekdayItem, true);
 }
 
 function toggleTimeOnClick(element){
@@ -119,16 +119,25 @@ async function createFormCheckRow(weekdayItem){
 
 async function createFormInputRow(weekdayItem, label, type){
     let rowDiv = document.createElement('div');
-    rowDiv.className = "form-group row";
+    rowDiv.className = "form-group row my-1";
     
     let rowColDiv = document.createElement('div');
-    rowColDiv.className = 'col-sm';
+    rowColDiv.className = 'col-sm input-group bootstrap-durationpicker';
 
     let rowFormInputElement = document.createElement('input');
-    rowFormInputElement.className = 'form-control';
-    rowFormInputElement.type = 'time';
+    rowFormInputElement.className = 'form-control form-input';
+    rowFormInputElement.type = 'text';
     rowFormInputElement.id = weekdayItem + '-' + type + '-timeInput';
     rowFormInputElement.setAttribute('aria-describedby', weekdayItem + '-' + type + '-timeInputLabel');
+    rowFormInputElement.setAttribute('disabled', '');
+
+    let addOnFormElement = document.createElement('span');
+    addOnFormElement.className="input-group-text";
+
+    let informationElement = document.createElement('i');
+    informationElement.className="bi bi-clock";
+
+    addOnFormElement.append(informationElement);
 
     let rowFormLabelElement = document.createElement('label');
     rowFormLabelElement.className = 'col-4 col-form-label';
@@ -137,16 +146,19 @@ async function createFormInputRow(weekdayItem, label, type){
     rowFormLabelElement.innerText = label;
 
     rowColDiv.append(rowFormInputElement);
+    rowColDiv.append(addOnFormElement);
 
     rowDiv.append(rowFormLabelElement);
     rowDiv.append(rowColDiv);
+
+    $(rowFormInputElement).durationpicker();
 
     return rowDiv;
 }
 
 async function createScheduleLayout(){
     const weekdayCards = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
-    const timeEdits = ["start", "pause", "hours"];
+    const timeEdits = ["start", "pauseStart", "pause", "hours"];
 
     for (let weekdayItem of weekdayCards){
         let item = document.getElementById(weekdayItem + '-card');
@@ -176,26 +188,9 @@ async function createScheduleLayout(){
     }
 }
 
-function padTimeIfNeeded(time){
-    if (time == '' || time == null)
-    {
-        return '';
-    }
-
-    let values = time.split(':');
-    
-    let hours = parseInt(values[0]);
-    let minutes = parseInt(values[1]);
-    
-    let hoursResult = hours < 10 ? '0' + hours : hours;
-    let minutesResult = minutes < 10 ? '0' + minutes : minutes;
-    
-    return hoursResult + ':' + minutesResult;
-}
-
-async function setScheduleForCard(start, pause, hours, weekday){
+async function setScheduleForCard(start, pauseStart, pause, hours, weekday, disabled){
     var activeSwitch = document.getElementById(weekday + '-isActive');
-    if (start != '' && pause != '' && hours != '')
+    if (start != '' && pauseStart != '' && pause != '' && hours != '')
     {
         activeSwitch.checked = true;
     }
@@ -206,12 +201,39 @@ async function setScheduleForCard(start, pause, hours, weekday){
 
     var startInput =  document.getElementById(weekday + '-start-timeInput');
     startInput.value = padTimeIfNeeded(start);
+    if (disabled){
+        startInput.setAttribute('disabled', '');
+    }else{
+        startInput.removeAttribute('disabled');
+    }
+    $(startInput).durationpicker('setDuration', padTimeIfNeeded(start));
+
+    var pauseStartInput =  document.getElementById(weekday + '-pauseStart-timeInput');
+    pauseStartInput.value = padTimeIfNeeded(pauseStart);
+    if (disabled){
+        pauseStartInput.setAttribute('disabled', '');
+    }else{
+        pauseStartInput.removeAttribute('disabled');
+    }
+    $(pauseStartInput).durationpicker('setDuration', padTimeIfNeeded(pauseStart));
 
     var pauseInput =  document.getElementById(weekday + '-pause-timeInput');
     pauseInput.value = padTimeIfNeeded(pause);
+    if (disabled){
+        pauseInput.setAttribute('disabled', '');
+    }else{
+        pauseInput.removeAttribute('disabled');
+    }
+    $(pauseInput).durationpicker('setDuration', padTimeIfNeeded(pause));
 
     var hoursInput =  document.getElementById(weekday + '-hours-timeInput');
     hoursInput.value = padTimeIfNeeded(hours);
+    if (disabled){
+        hoursInput.setAttribute('disabled', '');
+    }else{
+        hoursInput.removeAttribute('disabled');
+    }
+    $(hoursInput).durationpicker('setDuration', padTimeIfNeeded(hours));
 }
 
 async function isScheduleActive(weekday){
@@ -221,11 +243,13 @@ async function isScheduleActive(weekday){
 
 async function getScheduleFromCard(weekday){
     var startInput =  document.getElementById(weekday + '-start-timeInput');
+    var pauseStartInput = document.getElementById(weekday + '-pauseStart-timeInput');
     var pauseInput =  document.getElementById(weekday + '-pause-timeInput');
     var hoursInput =  document.getElementById(weekday + '-hours-timeInput');
 
     schedule = {};
     schedule.start = startInput.value;
+    schedule.pauseStart = pauseStartInput.value;
     schedule.pause = pauseInput.value;
     schedule.hours = hoursInput.value;
 
@@ -241,7 +265,7 @@ async function setSchedule(schedule){
             continue;
         }
        
-        await setScheduleForCard(schedule[i][0].start, schedule[i][0].pause, schedule[i][0].hours, singleWeekday);
+        await setScheduleForCard(schedule[i][0].start, schedule[i][0].pauseStart, schedule[i][0].pause, schedule[i][0].hours, singleWeekday, false);
         i++;
     }
 }
@@ -255,6 +279,11 @@ async function restore_options() {
     let showFillWeek = await getObjectFromLocalStorage(SHOW_FILL_WEEK);
     let showFillDay = await getObjectFromLocalStorage(SHOW_FILL_DAY);
     
+    if (schedule != null){
+        schedule = await runScheduleWithPauseStartMigration(schedule);
+        await saveObjectInLocalStorage(SCHEDULE, schedule);
+    }
+
     if (showFillWeek == null || entropyMinutes == null || schedule == null || showFillMonth == null || showFillWeek == null || showFillDay == null){
                
         if (entropyMinutes == null)
