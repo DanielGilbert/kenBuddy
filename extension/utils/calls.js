@@ -66,7 +66,7 @@ function USERWORK_URL(userId) {
   }
   
   
-  function addEntry(auth, userId, date, startTime, endTime, breakTime) {
+  function addEntry(auth, userId, date, startTime, endTime, breakTime, pauseStart, pauseEnd) {
     return fetchUrl(
       auth,
       ATTENDANCE_URL,
@@ -77,6 +77,10 @@ function USERWORK_URL(userId) {
         startTime: startTime,
         endTime: endTime,
         breakTime: breakTime,
+        breaks: [{
+          start: pauseStart,
+          end: pauseEnd
+        }],
         _approved: false,
         _changesTracking: [],
         _deleted: false,
