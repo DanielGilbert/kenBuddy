@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.9] - 2023-11-10
+
+### Added
+
+- Start time for lunch break can now be set. The time will be initialized by the start time of the workday + half the duration of the work day. [#10]
+
+### Fixed
+
+- The time input got reworked, and now no longer uses the "time" type to input.  [#15]
+
 ## [0.1.8] - 2023-04-03
 
 ### Fixed
