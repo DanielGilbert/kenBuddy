@@ -176,23 +176,6 @@ async function createScheduleLayout(){
     }
 }
 
-function padTimeIfNeeded(time){
-    if (time == '' || time == null)
-    {
-        return '';
-    }
-
-    let values = time.split(':');
-    
-    let hours = parseInt(values[0]);
-    let minutes = parseInt(values[1]);
-    
-    let hoursResult = hours < 10 ? '0' + hours : hours;
-    let minutesResult = minutes < 10 ? '0' + minutes : minutes;
-    
-    return hoursResult + ':' + minutesResult;
-}
-
 async function setScheduleForCard(start, pauseStart, pause, hours, weekday){
     var activeSwitch = document.getElementById(weekday + '-isActive');
     if (start != '' && pauseStart != '' && pause != '' && hours != '')

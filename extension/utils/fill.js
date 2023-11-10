@@ -88,7 +88,7 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
     for (const [idx, ts] of entries.entries()) {
       if (! await userHasEntryFor(auth, user.ownerId, ts.date)){
         statusContainer.innerText = `Saving day ${idx+1} of ${entries.length}...`;
-        console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause));
+        console.log(await addEntry(auth, user.ownerId, ts.date, ts.start, ts.end, ts.pause, ts.pauseStart, ts.pauseEnd));
       }
     }
 
