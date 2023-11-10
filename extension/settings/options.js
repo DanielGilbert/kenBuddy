@@ -17,7 +17,7 @@ async function save_options() {
         {
             var result = await getScheduleFromCard(weekday);
             if (schedule.count == null)           
-            schedule[count.toString()] = new Array({start: result.start, pause: result.pause, hours: result.hours}) ;
+            schedule[count.toString()] = new Array({start: result.start, startPause: result.startPause, pause: result.pause, hours: result.hours}) ;
         }
         else
         {
