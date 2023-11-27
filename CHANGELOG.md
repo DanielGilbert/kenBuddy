@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.10] - 2023-11-27
+
+### Fixed
+
+- kenBuddy now also attaches to `orgos-widget-punch-clock` (Thanks [Gustavo Edinger](https://github.com/GustavoEdinger)!)
+
+### Changed
+
+- Added [arrive.js](https://github.com/uzairfarooq/arrive), which now allows to listen for multiple widgets, and also will re-attach the element if you are navigating the page. 
+
 ## [0.1.9] - 2023-11-10
 
 ### Added
