@@ -97,7 +97,7 @@ var allowEntriesInTheFuture = false;
     extDiv.append(monthBtn);
   }
 
-  var selector = await checkElement('orgos-widget-attendance');
+  var selector = await checkElement('orgos-widget-punch-clock');
 
   var hasEntryForToday = false;
   var hasEntryForCurrentWeek = false;
