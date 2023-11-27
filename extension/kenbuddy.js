@@ -36,6 +36,8 @@ var showFillWeek = true;
 var showFillToday = false;
 var allowEntriesInTheFuture = false;
 
+var extDiv = null;
+
 (async function() {
   /* Make schedule and entropy configurable */
   localSchedule = await getObjectFromLocalStorage(SCHEDULE);
@@ -71,7 +73,7 @@ var allowEntriesInTheFuture = false;
   }
 
   /* Add button */
-  const extDiv = document.createElement('div');
+  extDiv = document.createElement('div');
   extDiv.style.textAlign = 'center';
   extDiv.className = 'btn-group-kenbuddy';
 
@@ -96,8 +98,6 @@ var allowEntriesInTheFuture = false;
     monthBtn.innerText = browser.i18n.getMessage('fillAttendanceMonthTitle');
     extDiv.append(monthBtn);
   }
-
-  var selector = await checkElement('orgos-widget-punch-clock');
 
   var hasEntryForToday = false;
   var hasEntryForCurrentWeek = false;
@@ -143,5 +143,12 @@ var allowEntriesInTheFuture = false;
     weekBtn.onclick = function() { this.disabled = "disabled"; fillCurrentWeek(this, localSchedule, localEntropyMinutes); }
   }
   
-  selector.append(extDiv);
+  document.arrive("orgos-widget-attendance", {fireOnAttributesModification: false}, AttachExtDiv);
+  document.arrive("orgos-widget-punch-clock", {fireOnAttributesModification: false}, AttachExtDiv);
 })();
+
+async function AttachExtDiv(newElem) {
+  if (extDiv != null){
+    newElem.append(extDiv);
+  }
+}
