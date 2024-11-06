@@ -1,7 +1,7 @@
 # kenBuddy - Browser extension
 ![](/asset/screenshot.png)
 
-This extension allows to fill the attendance sheet provided at kenjo.io in a more easier manner. If the real attendance is not important, and you are just filling this sheet for legal purpose - this extension is for you. It comes with an entropy and a small options page.
+This extension allows to fill the attendance sheet provided at kenjo.io in a much easier manner. If the real attendance is not important, and you are just filling this sheet for legal purpose - this extension is for you. It comes with an entropy and a small options page.
 
 For this extension to work, the "Attendance" widget needs to be visible on the home screen.
 
