@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "kenBuddy",
     "description": "__MSG_extensionDescription__",
-    "version": "0.1.10",
+    "version": "0.2.0",
     "icons": {
         "16": "logo/logo-16.png",
         "48": "logo/logo-48.png",
@@ -18,5 +18,12 @@
         "js": ["chrome/utils.js","utils/const.js","utils/utils.js","utils/calls.js","utils/fill.js","utils/arrive.js","kenbuddy.js"],
         "matches": ["https://app.kenjo.io/*"]
     }],
-    "default_locale": "en"
+    "web_accessible_resources": [{
+        "resources": [ "templates/*"],
+        "matches": [ "https://app.kenjo.io/*"]
+    }],
+    "default_locale": "en",
+    "action": {
+        "default_popup": "popup/popup.html"
+    }
 }

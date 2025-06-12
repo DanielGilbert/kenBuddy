@@ -6,7 +6,20 @@
 'use strict';
 
 /* MAIN */
+async function fillSpecialDay(statusContainer, schedule, entropyMinutes, date) {
+  // parse day
+  // this is ugly af.
+  var monthPickerElement = document.querySelector("kenjo-input-month-picker");
+  if (monthPickerElement === null) return;
+  var monthYear = monthPickerElement.querySelector(".ng-star-inserted");
+  if (monthYear === null) return;
 
+  var test = statusContainer.parentElement.orgoscolumn;
+
+  const startOfToday = startOfDay(date);
+  const endOfToday = endOfDay(date);
+  //await fillFor(statusContainer, startOfToday, endOfToday, schedule, entropyMinutes);
+}
 
 async function fillToday(statusContainer, schedule, entropyMinutes) {
   var date = new Date();
@@ -37,6 +50,7 @@ var showFillToday = false;
 var allowEntriesInTheFuture = false;
 
 var extDiv = null;
+var manualFillButtonDiv = null;
 
 (async function() {
   /* Make schedule and entropy configurable */
@@ -145,6 +159,36 @@ var extDiv = null;
   
   document.arrive("orgos-widget-attendance", {fireOnAttributesModification: false}, AttachExtDiv);
   document.arrive("orgos-widget-punch-clock", {fireOnAttributesModification: false}, AttachExtDiv);
+
+  document.arrive("orgos-column-container", {fireOnAttributesModification: false}, function(columnContainer) {
+    if (columnContainer.className.includes("pdap-day")){
+      var columnDiv = document.createElement("orgos-column");
+      columnDiv.className = "btn-group-kenbuddy";
+      var weekBtn = document.createElement('button');
+      weekBtn.innerText = "Tag ausfüllen";
+      if (columnContainer.parentElement.className.includes("non-working-day") || columnContainer.parentElement.className.includes(" after")){
+        weekBtn.setAttribute("disabled", "disabled");
+      }
+      weekBtn.onclick = function() { this.disabled = "disabled"; fillSpecialDay(this, localSchedule, localEntropyMinutes, new Date()); }
+      columnDiv.append(weekBtn)
+      columnContainer.append(columnDiv);  
+    }
+  });
+
+  document.arrive(".mat-menu-content",{
+      existing: true
+    }, function(singleContainer) {
+        var dividerDiv = document.createElement('div');
+        dividerDiv.setAttribute("_ngcontent-gsk-c299", "");
+        dividerDiv.className = "kenjo-font-weight-bold kenjo-font-size-12px kenjo-mt-10px kenjo-ml-15px kenjo-mb-5px kenjo-pr-15px ng-tns-c49-4 ng-star-inserted";
+        dividerDiv.innerText = "KENBUDDY";
+        var weekBtn = document.createElement('button');
+        weekBtn.setAttribute("mat-menu-item", "");
+        weekBtn.innerText = "Diesen Monat ausfüllen";
+        weekBtn.className = "mat-menu-item ng-tns-c49-4 ng-star-inserted";
+        singleContainer.append(dividerDiv);  
+        singleContainer.append(weekBtn);  
+  });
 })();
 
 async function AttachExtDiv(newElem) {
