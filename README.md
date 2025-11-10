@@ -1,3 +1,6 @@
+> [!WARNING]  
+> Starting January 2026, I will no longer be able to maintain this extension. If you would like to take over the development of this extension, reach out!
+
 # kenBuddy - Browser extension
 ![](/asset/screenshot.png)
 
