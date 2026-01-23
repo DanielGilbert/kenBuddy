@@ -87,6 +87,7 @@ var extDiv = null;
     weekPlaceholder.innerText = browser.i18n.getMessage('selectWeekTitle');
     weekPlaceholder.disabled = true;
     weekPlaceholder.selected = true;
+    weekPlaceholder.hidden = true;
     weekSelect.append(weekPlaceholder);
 
     // Generate week options (current + 12 past weeks)
@@ -110,6 +111,7 @@ var extDiv = null;
     monthPlaceholder.innerText = browser.i18n.getMessage('selectMonthTitle');
     monthPlaceholder.disabled = true;
     monthPlaceholder.selected = true;
+    monthPlaceholder.hidden = true;
     monthSelect.append(monthPlaceholder);
 
     // Generate month options (current + 3 past months)
