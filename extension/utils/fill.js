@@ -6,6 +6,12 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
     const user = await getUser(auth);
 
     statusContainer.innerText = "Getting user time off...";
+    let userTimeOff = [];
+    try {
+      userTimeOff = await getUserTimeOff(auth, user.ownerId, fromDate.toISOString(), toDate.toISOString()) || [];
+    } catch (e) {
+      console.log("Could not fetch user time off, skipping...", e);
+    }
 
     /* Get calendar info */
     statusContainer.innerText = "Getting user calendar...";
@@ -45,6 +51,33 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
         });
       }
     });
+
+    /* Parse user time off (vacations, sick days, etc.) */
+    if (userTimeOff && Array.isArray(userTimeOff)) {
+      userTimeOff.forEach((timeOff) => {
+        // Only consider approved time off requests
+        if (timeOff._status !== 'Approved') {
+          return;
+        }
+
+        const start = new Date(Date.parse(timeOff._from));
+        const end = new Date(Date.parse(timeOff._to));
+
+        // Add each day of the time off period
+        for (let day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
+          const dayStart = startOfDay(day);
+          const dayEnd = endOfDay(day);
+
+          if (dayStart >= fromDate && dayStart <= toDate) {
+            nonWorkingDays.push({
+              reason: timeOff._timeOffTypeName || 'Time Off',
+              start: dayStart,
+              end: dayEnd
+            });
+          }
+        }
+      });
+    }
 
     /* Generate month sheet */
     statusContainer.innerText = "Generating attendance sheet...";

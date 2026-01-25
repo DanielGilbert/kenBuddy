@@ -19,6 +19,22 @@
         "message" : "Everything done",
         "description" : "Title if today has been filled"
     },
+    "selectWeekTitle" : {
+        "message" : "Select week",
+        "description" : "Placeholder text for week dropdown"
+    },
+    "selectMonthTitle" : {
+        "message" : "Select month",
+        "description" : "Placeholder text for month dropdown"
+    },
+    "currentWeekLabel" : {
+        "message" : "This week",
+        "description" : "Label prefix for current week in dropdown"
+    },
+    "currentMonthLabel" : {
+        "message" : "This month",
+        "description" : "Label prefix for current month in dropdown"
+    },
     "sunday" : {
         "message" : "Sunday"
     },

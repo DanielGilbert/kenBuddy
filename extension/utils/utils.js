@@ -135,6 +135,103 @@ function getEndOfWeek(date) {
   return new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 7));
 }
 
+/**
+ * Format a date range for week display (e.g., "Dec 30 - Jan 5")
+ * @param {Date} startDate
+ * @param {Date} endDate
+ * @returns {string}
+ */
+function formatWeekRange(startDate, endDate) {
+  const options = { month: 'short', day: 'numeric' };
+  const startStr = startDate.toLocaleDateString('en-US', options);
+  const endStr = endDate.toLocaleDateString('en-US', options);
+  return `${startStr} - ${endStr}`;
+}
+
+/**
+ * Format a month for display (e.g., "December 2025")
+ * @param {Date} date
+ * @returns {string}
+ */
+function formatMonthYear(date) {
+  const options = { month: 'long', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
+
+/**
+ * Generate an array of week options for the dropdown
+ * @param {number} weeksBack - Number of past weeks to include (default 12)
+ * @returns {Array<{label: string, startDate: Date, endDate: Date, isCurrent: boolean, value: string}>}
+ */
+function generateWeekOptions(weeksBack = 12) {
+  const weeks = [];
+  const today = new Date();
+
+  for (let i = 0; i <= weeksBack; i++) {
+    const referenceDate = new Date(today);
+    referenceDate.setDate(referenceDate.getDate() - (i * 7));
+
+    const weekStart = getStartOfWeek(referenceDate);
+    const weekEnd = getEndOfWeek(referenceDate);
+
+    // For current week, end at today (matching current behavior)
+    const effectiveEnd = i === 0 ? endOfDay(today) : weekEnd;
+
+    weeks.push({
+      label: formatWeekRange(weekStart, i === 0 ? today : weekEnd),
+      startDate: weekStart,
+      endDate: effectiveEnd,
+      isCurrent: i === 0,
+      value: `${weekStart.toISOString()}|${effectiveEnd.toISOString()}`
+    });
+  }
+
+  return weeks;
+}
+
+/**
+ * Generate an array of month options for the dropdown
+ * @param {number} monthsBack - Number of past months to include (default 3)
+ * @returns {Array<{label: string, startDate: Date, endDate: Date, isCurrent: boolean, value: string}>}
+ */
+function generateMonthOptions(monthsBack = 3) {
+  const months = [];
+  const today = new Date();
+
+  for (let i = 0; i <= monthsBack; i++) {
+    const referenceDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
+
+    const monthStart = startOfMonth(referenceDate);
+    const monthEnd = endOfMonth(referenceDate);
+
+    // For current month, end at today (matching current behavior)
+    const effectiveEnd = i === 0 ? endOfDay(today) : monthEnd;
+
+    months.push({
+      label: formatMonthYear(referenceDate),
+      startDate: monthStart,
+      endDate: effectiveEnd,
+      isCurrent: i === 0,
+      value: `${monthStart.toISOString()}|${effectiveEnd.toISOString()}`
+    });
+  }
+
+  return months;
+}
+
+/**
+ * Parse a dropdown value back into date range
+ * @param {string} value - ISO date string pair separated by |
+ * @returns {{ startDate: Date, endDate: Date }}
+ */
+function parseDateRangeValue(value) {
+  const [startStr, endStr] = value.split('|');
+  return {
+    startDate: new Date(startStr),
+    endDate: new Date(endStr)
+  };
+}
+
 function hhmmToMinutes(str) {
   return str.split(':').reduce((acc, curr) => (acc*60) + +curr);
 }

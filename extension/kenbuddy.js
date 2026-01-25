@@ -15,18 +15,8 @@ async function fillToday(statusContainer, schedule, entropyMinutes) {
   await fillFor(statusContainer, startOfToday, endOfToday, schedule, entropyMinutes);
 }
 
-async function fillCurrentMonth(statusContainer, schedule, entropyMinutes) {
-  var currentDate = new Date();
-  const monthStart = startOfMonth(currentDate);
-  const monthEnd = endOfDay(currentDate);
-  await fillFor(statusContainer, monthStart, monthEnd, schedule, entropyMinutes);
-}
-
-async function fillCurrentWeek(statusContainer, schedule, entropyMinutes) {
-  var currentDate = new Date();
-  const weekStart = getStartOfWeek(currentDate);
-  const weekEnd = endOfDay(currentDate);
-  await fillFor(statusContainer, weekStart, weekEnd, schedule, entropyMinutes);
+async function fillCustomRange(statusContainer, fromDate, toDate, schedule, entropyMinutes) {
+  await fillFor(statusContainer, fromDate, toDate, schedule, entropyMinutes);
 }
 
 var localSchedule = {};
@@ -72,15 +62,18 @@ var extDiv = null;
     await saveObjectInLocalStorage(SHOW_FILL_DAY, showFillToday);
   }
 
-  /* Add button */
+  /* Add button and dropdowns */
   extDiv = document.createElement('div');
   extDiv.style.textAlign = 'center';
   extDiv.className = 'btn-group-kenbuddy';
 
-  const monthBtn = document.createElement('button');
   const todayBtn = document.createElement('button');
-  const weekBtn = document.createElement('button');
-  
+  const weekSelect = document.createElement('select');
+  const monthSelect = document.createElement('select');
+
+  weekSelect.className = 'kenbuddy-dropdown';
+  monthSelect.className = 'kenbuddy-dropdown';
+
   if (showFillToday){
     todayBtn.type = 'button';
     todayBtn.innerText = browser.i18n.getMessage('fillAttendanceTodayTitle');
@@ -88,59 +81,91 @@ var extDiv = null;
   }
 
   if (showFillWeek) {
-    weekBtn.type = 'button';
-    weekBtn.innerText = browser.i18n.getMessage('fillAttendanceWeekTitle');
-    extDiv.append(weekBtn);
+    // Add placeholder option
+    const weekPlaceholder = document.createElement('option');
+    weekPlaceholder.value = '';
+    weekPlaceholder.innerText = browser.i18n.getMessage('selectWeekTitle');
+    weekPlaceholder.disabled = true;
+    weekPlaceholder.selected = true;
+    weekPlaceholder.hidden = true;
+    weekSelect.append(weekPlaceholder);
+
+    // Generate week options (current + 12 past weeks)
+    const weekOptions = generateWeekOptions(12);
+    weekOptions.forEach(week => {
+      const option = document.createElement('option');
+      option.value = week.value;
+      option.innerText = week.isCurrent
+        ? `${browser.i18n.getMessage('currentWeekLabel')} (${week.label})`
+        : week.label;
+      weekSelect.append(option);
+    });
+
+    extDiv.append(weekSelect);
   }
 
   if (showFillMonth){
-    monthBtn.type = 'button';
-    monthBtn.innerText = browser.i18n.getMessage('fillAttendanceMonthTitle');
-    extDiv.append(monthBtn);
+    // Add placeholder option
+    const monthPlaceholder = document.createElement('option');
+    monthPlaceholder.value = '';
+    monthPlaceholder.innerText = browser.i18n.getMessage('selectMonthTitle');
+    monthPlaceholder.disabled = true;
+    monthPlaceholder.selected = true;
+    monthPlaceholder.hidden = true;
+    monthSelect.append(monthPlaceholder);
+
+    // Generate month options (current + 3 past months)
+    const monthOptions = generateMonthOptions(3);
+    monthOptions.forEach(month => {
+      const option = document.createElement('option');
+      option.value = month.value;
+      option.innerText = month.isCurrent
+        ? `${browser.i18n.getMessage('currentMonthLabel')} (${month.label})`
+        : month.label;
+      monthSelect.append(option);
+    });
+
+    extDiv.append(monthSelect);
   }
 
   var hasEntryForToday = false;
-  var hasEntryForCurrentWeek = false;
 
   try {
     let date = new Date();
     const today = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
-
-    const startOfWeek = getStartOfWeek(date);
-    const endOfWeek = endOfDay(date);
     let auth = await getAuth();
     let user = await getUser(auth);
     hasEntryForToday = await userHasEntryFor(auth, user.ownerId, today);
-
-    var count = 0;
-    for (let day = startOfWeek; day <= endOfWeek; day.setDate(day.getDate() + 1)) {
-      let result = await userHasEntryFor(auth, user.ownerId, day)
-      if (!result && ((day.getDay() in localSchedule) && localSchedule[day.getDay()].length != 0)){
-        hasEntryForCurrentWeek = false;
-        break;
-      }
-      hasEntryForCurrentWeek = true;
-      count++;
-    }
-
   } catch (exception) {
     hasEntryForToday = false;
   }
 
-  monthBtn.onclick = function() { this.disabled = "disabled"; fillCurrentMonth(this, localSchedule, localEntropyMinutes); }
+  // Week dropdown handler
+  weekSelect.onchange = async function() {
+    if (!this.value) return;
 
+    const { startDate, endDate } = parseDateRangeValue(this.value);
+    this.disabled = true;
+
+    await fillCustomRange(this, startDate, endDate, localSchedule, localEntropyMinutes);
+  };
+
+  // Month dropdown handler
+  monthSelect.onchange = async function() {
+    if (!this.value) return;
+
+    const { startDate, endDate } = parseDateRangeValue(this.value);
+    this.disabled = true;
+
+    await fillCustomRange(this, startDate, endDate, localSchedule, localEntropyMinutes);
+  };
+
+  // Today button handler
   if (hasEntryForToday){
     todayBtn.disabled = true;
     todayBtn.innerText = browser.i18n.getMessage('attendanceFilledTitle');
   } else {
     todayBtn.onclick = function() { this.disabled = "disabled"; fillToday(this, localSchedule, localEntropyMinutes); }
-  }
-
-  if (hasEntryForCurrentWeek){
-    weekBtn.disabled = true;
-    weekBtn.innerText = browser.i18n.getMessage('attendanceFilledTitle');
-  } else {
-    weekBtn.onclick = function() { this.disabled = "disabled"; fillCurrentWeek(this, localSchedule, localEntropyMinutes); }
   }
   
   document.arrive("orgos-widget-attendance", {fireOnAttributesModification: false}, AttachExtDiv);
