@@ -8,7 +8,8 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
     statusContainer.innerText = "Getting user time off...";
     let userTimeOff = [];
     try {
-      userTimeOff = await getUserTimeOff(auth, user.ownerId, fromDate.toISOString(), toDate.toISOString()) || [];
+      const timeOffResponse = await getUserTimeOff(auth, user._id);
+      userTimeOff = timeOffResponse?.records || [];
     } catch (e) {
       console.log("Could not fetch user time off, skipping...", e);
     }
@@ -54,14 +55,17 @@ async function fillFor(statusContainer, fromDate, toDate, localSchedule, localEn
 
     /* Parse user time off (vacations, sick days, etc.) */
     if (userTimeOff && Array.isArray(userTimeOff)) {
-      userTimeOff.forEach((timeOff) => {
-        // Only consider approved time off requests
-        if (timeOff._status !== 'Approved') {
+      userTimeOff.forEach((record) => {
+        const timeOff = record.request;
+        if (!timeOff) return;
+
+        // Only consider approved or processed time off requests
+        if (timeOff.status !== 'Approved' && timeOff.status !== 'Processed') {
           return;
         }
 
-        const start = new Date(Date.parse(timeOff._from));
-        const end = new Date(Date.parse(timeOff._to));
+        const start = new Date(Date.parse(timeOff.from));
+        const end = new Date(Date.parse(timeOff.to));
 
         // Add each day of the time off period
         for (let day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
