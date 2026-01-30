@@ -52,15 +52,15 @@ function USERWORK_URL(userId) {
     );
   }
   
-  function getUserTimeOff(auth, userId, fromDate, toDate) {
+  function getUserTimeOff(auth, userId) {
     return fetchUrl(
       auth,
       TIMEOFF_URL,
       'POST',
       JSON.stringify({
-        _from: { $gte: fromDate },
-        _to: { $lte: toDate },
-        _userId: userId
+        userId: userId,
+        historyListPage: 1,
+        showPolicyChanges: false
       })
     );
   }
