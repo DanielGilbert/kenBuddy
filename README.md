@@ -1,6 +1,6 @@
 > [!WARNING]  
-> Starting January 2026, I will no longer be able to maintain this extension. If you would like to take over the development of this extension, reach out!
-
+> ~~Starting January 2026, I will no longer be able to maintain this extension. If you would like to take over the development of this extension, reach out!~~
+> Thanks to [Keralin](https://github.com/Keralin) for continuing to support kenBuddy - much appreciated! 🫶
 # kenBuddy - Browser extension
 ![](/asset/screenshot.png)
 
