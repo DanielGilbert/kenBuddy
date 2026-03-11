@@ -5,7 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.1.11] - 2026-03-11
+
+### Added
+
+- Ability to select and fill attendance for past weeks and months.
+- Support for Linux/macOS build script.
+- Transitioned Chrome extension to Manifest V3.
+
+### Fixed
+
+- Updated time-off API endpoint and improved response handling.
+- Hidden placeholder options in dropdown menus.
+- Various documentation fixes and README updates.
 
 ## [0.1.10] - 2023-11-27
 
